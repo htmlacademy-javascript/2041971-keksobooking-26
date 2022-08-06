@@ -80,11 +80,6 @@ const getRandomAvatarId = () => {
 
 };
 
-const getRandomFeature = () => {
-  const features = FEATURES.sort();
-  const feature = features.shift();
-  return feature;
-};
 
 const getRandomPhoto = () => {
   const photos = getRandomElement(PHOTOS);
@@ -98,6 +93,12 @@ const getLocation = () => ({
 
 const createDescriptionHotel = () => {
   const coordinates = getLocation();
+  const copyFeatures = FEATURES.slice().sort();
+  const getRandomFeature = () => {
+    const feature = copyFeatures.shift();
+    return feature;
+  };
+
   return {
     author: {
       avatar: `img/avatars/user${getRandomAvatarId()}.png`,
