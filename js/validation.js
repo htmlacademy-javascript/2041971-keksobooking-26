@@ -1,3 +1,11 @@
+const COMMERCIAL_ROOM = '100';
+const NOT_FOR_GUESTS = '0';
+const MIN_FOR_BUNGALO = 0;
+const MIN_FOR_FLAT = 1000;
+const MIN_FOR_HOTEL = 3000;
+const MIN_FOR_HOUSE = 5000;
+const MIN_FOR_PALACE = 10000;
+
 const form = document.querySelector('.ad-form');
 const price = form.querySelector('#price');
 const type = form.querySelector('#type');
@@ -16,66 +24,66 @@ timeOut.addEventListener('change', () => {
 
 const pristine = new Pristine(form, {
   classTo: 'ad-form__element',
-  errorClass: 'ad-form__element--invalid',
-  successClass: 'ad-form__element--valid',
   errorTextParent: 'ad-form__element',
-  errorTextTag: 'span',
-  errorTextClass: 'ad-form__error',
 });
 
-price.min = 1000;
-price.placeholder = 1000;
+price.min = MIN_FOR_FLAT;
+price.placeholder = MIN_FOR_FLAT;
+
 const setMinPrice = () => {
   type.addEventListener('change', () => {
     price.value = '';
-    price.min = 1000;
-    price.placeholder = 1000;
     switch (type.value) {
       case 'bungalow':
-        price.min = 0;
-        price.placeholder = 0;
+        price.min = MIN_FOR_BUNGALO;
+        price.placeholder = MIN_FOR_BUNGALO;
         break;
       case 'hotel':
-        price.min = 3000;
-        price.placeholder = 3000;
+        price.min = MIN_FOR_HOTEL;
+        price.placeholder = MIN_FOR_HOTEL;
         break;
       case 'house':
-        price.min = 5000;
-        price.placeholder = 5000;
+        price.min = MIN_FOR_HOUSE;
+        price.placeholder = MIN_FOR_HOUSE;
         break;
       case 'palace':
-        price.min = 10000;
-        price.placeholder = 10000;
+        price.min = MIN_FOR_PALACE;
+        price.placeholder = MIN_FOR_PALACE;
         break;
       case 'flat':
-      default:
-        price.min = 1000;
-        price.placeholder = 1000;
+        price.min = MIN_FOR_FLAT;
+        price.placeholder = MIN_FOR_FLAT;
         break;
     }
   });
 };
-
-const validateCapacity = () => {
-  roomNumber.addEventListener('change', () => {
-    switch (roomNumber.value) {
-      case 1:
-
-    }
-  });
-};
-
+setMinPrice();
 const validatePrice = () => {
-  setMinPrice();
   price.addEventListener('input', () => +price.value >= +price.min);
   if (price.value) {
     return +price.value >= +price.min;
   }
 };
 
+const validateCapacity = () => {
+  if (
+    capacity.value === NOT_FOR_GUESTS &&
+    roomNumber.value === COMMERCIAL_ROOM
+  ) {
+    return true;
+  } else if (
+    capacity.value <= roomNumber.value &&
+    capacity.value !== NOT_FOR_GUESTS &&
+    roomNumber.value !== COMMERCIAL_ROOM
+  ) {
+    return true;
+  } else {
+    return false;
+  }
+};
 
 pristine.addValidator(price, validatePrice, 'Меньше допустимого значения');
-
+pristine.addValidator(capacity, validateCapacity, 'Недопустимое количество гостей');
 
 form.addEventListener('submit', (evt) => {
   evt.preventDefault();
