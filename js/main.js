@@ -1,3 +1,5 @@
-import './popup.js';
-import './form.js'
-import './validation.js'
+import {renderCards} from './popup.js';
+import './form.js';
+import './validation.js';
+
+renderCards();

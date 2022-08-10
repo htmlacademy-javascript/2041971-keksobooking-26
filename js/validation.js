@@ -5,87 +5,84 @@ const MIN_FOR_FLAT = 1000;
 const MIN_FOR_HOTEL = 3000;
 const MIN_FOR_HOUSE = 5000;
 const MIN_FOR_PALACE = 10000;
+const CAPACITY_CARRENT = 1;
 
-const form = document.querySelector('.ad-form');
-const price = form.querySelector('#price');
-const type = form.querySelector('#type');
-const timeIn = form.querySelector('#timein');
-const timeOut = form.querySelector('#timeout');
-const roomNumber = form.querySelector('#room_number');
-const capacity = form.querySelector('#capacity');
+const formElement = document.querySelector('.ad-form');
+const priceElement = formElement.querySelector('#price');
+const typeElement = formElement.querySelector('#type');
+const timeInElement = formElement.querySelector('#timein');
+const timeOutElement = formElement.querySelector('#timeout');
+const roomNumberElement = formElement.querySelector('#room_number');
+const capacityElement = formElement.querySelector('#capacity');
 
-timeIn.addEventListener('change', () => {
-  timeOut.value = timeIn.value;
+timeInElement.addEventListener('change', () => {
+  timeOutElement.value = timeInElement.value;
 });
 
-timeOut.addEventListener('change', () => {
-  timeIn.value = timeOut.value;
+timeOutElement.addEventListener('change', () => {
+  timeInElement.value = timeOutElement.value;
 });
 
-const pristine = new Pristine(form, {
+const pristine = new Pristine(formElement, {
   classTo: 'ad-form__element',
   errorTextParent: 'ad-form__element',
 });
 
-price.min = MIN_FOR_FLAT;
-price.placeholder = MIN_FOR_FLAT;
+priceElement.min = MIN_FOR_FLAT;
+priceElement.placeholder = MIN_FOR_FLAT;
+capacityElement.value = CAPACITY_CARRENT;
 
-const setMinPrice = () => {
-  type.addEventListener('change', () => {
-    price.value = '';
-    switch (type.value) {
+const setMinPriceListener = () => {
+  typeElement.addEventListener('change', () => {
+    priceElement.value = '';
+    switch (typeElement.value) {
       case 'bungalow':
-        price.min = MIN_FOR_BUNGALO;
-        price.placeholder = MIN_FOR_BUNGALO;
+        priceElement.min = MIN_FOR_BUNGALO;
+        priceElement.placeholder = MIN_FOR_BUNGALO;
         break;
       case 'hotel':
-        price.min = MIN_FOR_HOTEL;
-        price.placeholder = MIN_FOR_HOTEL;
+        priceElement.min = MIN_FOR_HOTEL;
+        priceElement.placeholder = MIN_FOR_HOTEL;
         break;
       case 'house':
-        price.min = MIN_FOR_HOUSE;
-        price.placeholder = MIN_FOR_HOUSE;
+        priceElement.min = MIN_FOR_HOUSE;
+        priceElement.placeholder = MIN_FOR_HOUSE;
         break;
       case 'palace':
-        price.min = MIN_FOR_PALACE;
-        price.placeholder = MIN_FOR_PALACE;
+        priceElement.min = MIN_FOR_PALACE;
+        priceElement.placeholder = MIN_FOR_PALACE;
         break;
       case 'flat':
-        price.min = MIN_FOR_FLAT;
-        price.placeholder = MIN_FOR_FLAT;
+        priceElement.min = MIN_FOR_FLAT;
+        priceElement.placeholder = MIN_FOR_FLAT;
         break;
     }
   });
 };
-setMinPrice();
+setMinPriceListener();
 const validatePrice = () => {
-  price.addEventListener('input', () => +price.value >= +price.min);
-  if (price.value) {
-    return +price.value >= +price.min;
-  }
+  priceElement.addEventListener('input', () => +priceElement.value >= +priceElement.min);
+  return +priceElement.value >= +priceElement.min;
 };
 
 const validateCapacity = () => {
-  if (
-    capacity.value === NOT_FOR_GUESTS &&
-    roomNumber.value === COMMERCIAL_ROOM
-  ) {
-    return true;
-  } else if (
-    capacity.value <= roomNumber.value &&
-    capacity.value !== NOT_FOR_GUESTS &&
-    roomNumber.value !== COMMERCIAL_ROOM
-  ) {
+  const isValidCommercial = capacityElement.value === NOT_FOR_GUESTS &&
+  roomNumberElement.value === COMMERCIAL_ROOM;
+  const isValidCapacity = capacityElement.value <= roomNumberElement.value &&
+  capacityElement.value !== NOT_FOR_GUESTS &&
+  roomNumberElement.value !== COMMERCIAL_ROOM;
+
+  if (isValidCommercial || isValidCapacity) {
     return true;
   } else {
     return false;
   }
 };
 
-pristine.addValidator(price, validatePrice, 'Меньше допустимого значения');
-pristine.addValidator(capacity, validateCapacity, 'Недопустимое количество гостей');
+pristine.addValidator(priceElement, validatePrice, 'Меньше допустимого значения');
+pristine.addValidator(capacityElement, validateCapacity, 'Недопустимое количество гостей');
 
-form.addEventListener('submit', (evt) => {
+formElement.addEventListener('submit', (evt) => {
   evt.preventDefault();
   pristine.validate();
 });

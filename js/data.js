@@ -5,7 +5,7 @@ const DESCRIPTIONS = [
   'Отель расположен в сердце Москвы. К услугам гостей круглосуточная стойка регистрации.',
   'Парам особенно нравится расположение.',
   'К услугам гостей этого отеля ресторан и номера с кондиционером и собственной ванной комнатой.',
-  'Отель, отремонтированный в декабря 2015 года, расположен в центре популярного района.',
+  'Отель, отремонтированный в декабре 2015 года, расположен в центре популярного района.',
   'Гости отеля Toggle suidobashi TOKYO могут отдохнуть на террасе.',
 ];
 
@@ -26,13 +26,13 @@ const TYPES = [
   'hotel',
 ];
 
-const CHECKIN = [
+const CHECKIN_VARIANTS = [
   '12:00',
   '13:00',
   '14:00',
 ];
 
-const CHECKOUT = [
+const CHECKOUT_VARIANTS = [
   '12:00',
   '13:00',
   '14:00',
@@ -47,10 +47,11 @@ const FEATURES = [
   'conditioner',
 ];
 
+const URL = 'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/';
 const PHOTOS = [
-  'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/duonguyen-8LrGtIxxa4w.jpg',
-  'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/brandon-hoogenboom-SNxQGWxZQi0.jpg',
-  'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/claire-rendall-b6kAwr1i0Iw.jpg',
+  `${URL}duonguyen-8LrGtIxxa4w.jpg`,
+  `${URL}brandon-hoogenboom-SNxQGWxZQi0.jpg`,
+  `${URL}claire-rendall-b6kAwr1i0Iw.jpg`,
 ];
 
 const MIN_PRICE = 2000;
@@ -65,21 +66,10 @@ const MIN_LNG = 139.70000;
 const MAX_LNG = 139.80000;
 const DIGITS = 5;
 const MAX_ID = 10;
-const HOTELS_COUNT = 10;
 const MIN_FEATURES = 1;
 const MIN_PHOTOS = 1;
 
 const getRandomElement = (elements) => elements [getRandomPositiveInteger(0, elements.length - 1)];
-const idAvatars = Array.from({length: MAX_ID}, (v,k)=> ++k).sort();
-
-const getRandomAvatarId = () => {
-  let id = idAvatars.shift();
-  if (id < MAX_ID) {
-    id = `0${id}`;}
-  return id;
-
-};
-
 
 const getRandomPhoto = () => {
   const photos = getRandomElement(PHOTOS);
@@ -91,17 +81,22 @@ const getLocation = () => ({
   lng:getRandomPositiveFloat(MIN_LNG, MAX_LNG, DIGITS),
 });
 
-const createDescriptionHotel = () => {
-  const coordinates = getLocation();
+
+const getFeatures = () => {
   const copyFeatures = FEATURES.slice().sort();
   const getRandomFeature = () => {
     const feature = copyFeatures.shift();
     return feature;
   };
+  return Array.from({length: getRandomPositiveInteger(MIN_FEATURES, FEATURES.length)}, getRandomFeature);
+};
+
+const createDescriptionHotel = (avatarId) => {
+  const coordinates = getLocation();
 
   return {
     author: {
-      avatar: `img/avatars/user${getRandomAvatarId()}.png`,
+      avatar: `img/avatars/user${avatarId}.png`,
     },
     offer: {
       title: getRandomElement(TITLES),
@@ -110,9 +105,9 @@ const createDescriptionHotel = () => {
       type: getRandomElement(TYPES),
       rooms: getRandomPositiveInteger(MIN_ROOMS, MAX_ROOMS),
       guests: getRandomPositiveInteger(MIN_GUESTS, MAX_GUESTS),
-      checkin: getRandomElement(CHECKIN),
-      checkout: getRandomElement(CHECKOUT),
-      features: Array.from({length: getRandomPositiveInteger(MIN_FEATURES, FEATURES.length)}, getRandomFeature),
+      checkin: getRandomElement(CHECKIN_VARIANTS),
+      checkout: getRandomElement(CHECKOUT_VARIANTS),
+      features: getFeatures(),
       description: getRandomElement(DESCRIPTIONS),
       photos: Array.from({length: getRandomPositiveInteger(MIN_PHOTOS, PHOTOS.length)}, getRandomPhoto),
     },
@@ -120,6 +115,11 @@ const createDescriptionHotel = () => {
   };
 };
 
-const createCardHotels = () => Array.from({length: HOTELS_COUNT}, createDescriptionHotel);
+const cardHotels =  Array.from({length: MAX_ID}, (_,i) => {
+  const id = `${i+1}`;
+  const idAvatar = id.padStart(2, '0');
+  return createDescriptionHotel(idAvatar);
+});
 
-export {createCardHotels};
+console.log(cardHotels);
+export {cardHotels};
