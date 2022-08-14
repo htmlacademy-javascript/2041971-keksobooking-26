@@ -1,11 +1,14 @@
 const COMMERCIAL_ROOM = '100';
 const NOT_FOR_GUESTS = '0';
+const MAX_PRICE = 100000;
 const MIN_FOR_BUNGALO = 0;
 const MIN_FOR_FLAT = 1000;
 const MIN_FOR_HOTEL = 3000;
 const MIN_FOR_HOUSE = 5000;
 const MIN_FOR_PALACE = 10000;
 const CAPACITY_CARRENT = 1;
+const SLIDER_STEP = 1;
+const DIGITS = 0;
 
 const formElement = document.querySelector('.ad-form');
 const priceElement = formElement.querySelector('#price');
@@ -14,6 +17,7 @@ const timeInElement = formElement.querySelector('#timein');
 const timeOutElement = formElement.querySelector('#timeout');
 const roomNumberElement = formElement.querySelector('#room_number');
 const capacityElement = formElement.querySelector('#capacity');
+const sliderElement = formElement.querySelector('.ad-form__slider');
 
 timeInElement.addEventListener('change', () => {
   timeOutElement.value = timeInElement.value;
@@ -59,7 +63,76 @@ const setMinPriceListener = () => {
     }
   });
 };
+
 setMinPriceListener();
+
+noUiSlider.create(sliderElement, {
+  range: {
+    min: MIN_FOR_FLAT,
+    max: MAX_PRICE,
+  },
+  start: MIN_FOR_FLAT,
+  step: SLIDER_STEP,
+  connect: 'lower',
+  format: {
+    to: function (value) {
+      return value.toFixed(DIGITS);
+    },
+    from: function (value) {
+      return parseFloat(value);
+    },
+  },
+});
+
+sliderElement.noUiSlider.on('update', () => {
+  priceElement.value = sliderElement.noUiSlider.get();
+});
+
+typeElement.addEventListener('change', (evt) => {
+  switch (evt.target.selected) {
+    case 'bungalow':
+      sliderElement.noUiSlider.updateOptions({
+        range: {
+          min: MIN_FOR_BUNGALO,
+        },
+        start: MIN_FOR_BUNGALO,
+      });
+      break;
+    case 'hotel':
+      sliderElement.noUiSlider.updateOptions({
+        range: {
+          min: MIN_FOR_HOTEL,
+        },
+        start: MIN_FOR_HOTEL,
+      });
+      break;
+    case 'house':
+      sliderElement.noUiSlider.updateOptions({
+        range: {
+          min: MIN_FOR_HOUSE,
+        },
+        start: MIN_FOR_HOUSE,
+      });
+      break;
+    case 'palace':
+      sliderElement.noUiSlider.updateOptions({
+        range: {
+          min: MIN_FOR_PALACE,
+        },
+        start: MIN_FOR_PALACE,
+      });
+      break;
+    case 'flat':
+      sliderElement.noUiSlider.updateOptions({
+        range: {
+          min: MIN_FOR_PALACE,
+        },
+        start: MIN_FOR_FLAT,
+      });
+      break;
+  }
+});
+
 const validatePrice = () => {
   priceElement.addEventListener('input', () => +priceElement.value >= +priceElement.min);
   return +priceElement.value >= +priceElement.min;
@@ -86,3 +159,5 @@ formElement.addEventListener('submit', (evt) => {
   evt.preventDefault();
   pristine.validate();
 });
+
+export {formElement};

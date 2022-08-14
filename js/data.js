@@ -121,5 +121,4 @@ const cardHotels =  Array.from({length: MAX_ID}, (_,i) => {
   return createDescriptionHotel(idAvatar);
 });
 
-console.log(cardHotels);
 export {cardHotels};

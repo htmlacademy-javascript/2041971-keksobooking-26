@@ -1,5 +1,5 @@
-import {renderCards} from './popup.js';
 import './form.js';
 import './validation.js';
+import './map.js';
 
-renderCards();
+

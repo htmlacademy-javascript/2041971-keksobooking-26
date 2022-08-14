@@ -5,6 +5,8 @@
   <link rel="stylesheet" href="css/normalize.css">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="nouislider\nouislider.css">
+  <link rel="stylesheet" href="leaflet\leaflet.css">
+  <link rel="stylesheet" href="nouislider\nouislider.css">
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
   <title>Кексобукинг</title>
 </head>
@@ -20,7 +22,7 @@
     <section class="map">
 
       <!-- Блок для вставки карты -->
-      <div class="map__canvas" id="map-canvas"></div>
+      <div class="map__canvas" id="map-canvas" style="width: 640px; height: 480px;"></div>
 
       <!-- Фильтрация объявлений -->
       <div class="map__filters-container">
@@ -236,6 +238,8 @@
     </div>
   </template>
   <script src="pristine/pristine.min.js"></script>
+  <script src="nouislider\nouislider.js"></script>
+  <script src="leaflet\leaflet.js"></script>
   <script src="nouislider\nouislider.js"></script>
   <script src="js/main.js" type="module"></script>
 </body>
