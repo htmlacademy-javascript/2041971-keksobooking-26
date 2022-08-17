@@ -1,7 +1,6 @@
 const cardTemplateElement = document.querySelector('#card')
   .content
   .querySelector('.popup');
-
 const setElementValue = (data, element, attribute) => {
   if (data) {
     element[attribute] = data;
@@ -9,10 +8,18 @@ const setElementValue = (data, element, attribute) => {
     element.remove();
   }
 };
-
 const HtmlAttribute = {
   TEXT_CONTENT: 'textContent',
   SRC: 'src',
+};
+const RoomVariations = {
+  ONE_ROOM: ' комната',
+  HUNDRED_ROOMS: ' комнат',
+  DEFAULT_ROOMS: ' комнаты',
+};
+const GuestVariations = {
+  ONE_GUEST: ' гостя',
+  DEFAULT_GUESTS: ' гостей',
 };
 
 const renderCards = (hotel) => {
@@ -40,21 +47,21 @@ const renderCards = (hotel) => {
   if (hotel.offer.rooms && hotel.offer.guests) {
     switch (hotel.offer.rooms) {
       case 1:
-        hotel.offer.rooms += ' комната';
+        hotel.offer.rooms += RoomVariations.ONE_ROOM;
         break;
-      case 5:
-        hotel.offer.rooms += ' комнат';
+      case 100:
+        hotel.offer.rooms += RoomVariations.HUNDRED_ROOMS;
         break;
       default:
-        hotel.offer.rooms += ' комнаты';
+        hotel.offer.rooms += RoomVariations.DEFAULT_ROOMS;
     }
 
     switch (hotel.offer.guests) {
       case 1:
-        hotel.offer.guests += '  гостя';
+        hotel.offer.guests += GuestVariations.ONE_GUEST;
         break;
       default:
-        hotel.offer.guests += ' гостей';
+        hotel.offer.guests += GuestVariations.DEFAULT_GUESTS;
     }
     popupCapacityElement.textContent = `${hotel.offer.rooms} для ${hotel.offer.guests} `;
   } else {

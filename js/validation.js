@@ -155,9 +155,15 @@ const validateCapacity = () => {
 pristine.addValidator(priceElement, validatePrice, 'Меньше допустимого значения');
 pristine.addValidator(capacityElement, validateCapacity, 'Недопустимое количество гостей');
 
-formElement.addEventListener('submit', (evt) => {
-  evt.preventDefault();
-  pristine.validate();
-});
-
+const setUserFormSubmit = (onSuccess) => {
+  formElement.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+    const isValid = pristine.validate();
+    if (isValid) {
+      const formData = new FormData(evt.target);
+    } else {
+      console.log('Форма невалидна');
+    }
+  });
+};
 export {formElement};
