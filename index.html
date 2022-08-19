@@ -22,7 +22,7 @@
     <section class="map">
 
       <!-- Блок для вставки карты -->
-      <div class="map__canvas" id="map-canvas" style="width: 640px; height: 480px;"></div>
+      <div class="map__canvas" id="map-canvas"></div>
 
       <!-- Фильтрация объявлений -->
       <div class="map__filters-container">
@@ -74,7 +74,7 @@
     <!-- Форма объявления -->
     <section class="notice">
       <h2 class="notice__title">Ваше объявление</h2>
-      <form class="ad-form" method="post" enctype="multipart/form-data" action="https://26.javascript.pages.academy/keksobooking" autocomplete="off">
+      <form class="ad-form" action="https://26.javascript.pages.academy/keksobooking" method="post" enctype="multipart/form-data" autocomplete="off">
         <fieldset class="ad-form-header">
           <legend class="ad-form-header__title">Ваша фотография (для карты)</legend>
           <div class="ad-form-header__upload">
@@ -97,7 +97,7 @@
         </fieldset>
         <fieldset class="ad-form__element ad-form__element--wide">
           <label class="ad-form__label" for="address">Адрес (координаты)</label>
-          <input id="address" name="address" type="text" readonly required
+          <input id="address" name="address" type="text" readonly
           data-pristine-required-message="Обязательное поле">
         </fieldset>
         <fieldset class="ad-form__element">

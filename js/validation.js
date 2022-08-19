@@ -1,14 +1,17 @@
 import {sendData} from './api.js';
 import {getMessageSuccess, getMessageError} from './messages.js';
 
+const MinPriceDictionary = {
+  MIN_FOR_BUNGALO: 0,
+  MIN_FOR_FLAT: 1000,
+  MIN_FOR_HOTEL: 3000,
+  MIN_FOR_HOUSE: 5000,
+  MIN_FOR_PALACE: 10000,
+};
 const COMMERCIAL_ROOM = '100';
 const NOT_FOR_GUESTS = '0';
 const MAX_PRICE = 100000;
-const MIN_FOR_BUNGALO = 0;
-const MIN_FOR_FLAT = 1000;
-const MIN_FOR_HOTEL = 3000;
-const MIN_FOR_HOUSE = 5000;
-const MIN_FOR_PALACE = 10000;
+
 const CAPACITY_CARRENT = 1;
 const SLIDER_STEP = 1;
 const DIGITS = 0;
@@ -21,9 +24,6 @@ const timeOutElement = formElement.querySelector('#timeout');
 const roomNumberElement = formElement.querySelector('#room_number');
 const capacityElement = formElement.querySelector('#capacity');
 const sliderElement = formElement.querySelector('.ad-form__slider');
-const addressElement = formElement.querySelector('#address');
-console.log(addressElement.value);
-//const submitButtonElement = formElement.querySelector('.ad-form__submit');
 
 timeInElement.addEventListener('change', () => {
   timeOutElement.value = timeInElement.value;
@@ -38,8 +38,8 @@ const pristine = new Pristine(formElement, {
   errorTextParent: 'ad-form__element',
 });
 
-priceElement.min = MIN_FOR_FLAT;
-priceElement.placeholder = MIN_FOR_FLAT;
+priceElement.min = MinPriceDictionary.MIN_FOR_FLAT;
+priceElement.placeholder = MinPriceDictionary.MIN_FOR_FLAT;
 capacityElement.value = CAPACITY_CARRENT;
 
 const setMinPriceListener = () => {
@@ -47,24 +47,24 @@ const setMinPriceListener = () => {
     priceElement.value = '';
     switch (typeElement.value) {
       case 'bungalow':
-        priceElement.min = MIN_FOR_BUNGALO;
-        priceElement.placeholder = MIN_FOR_BUNGALO;
+        priceElement.min = MinPriceDictionary.MIN_FOR_BUNGALO;
+        priceElement.placeholder = MinPriceDictionary.MIN_FOR_BUNGALO;
         break;
       case 'hotel':
-        priceElement.min = MIN_FOR_HOTEL;
-        priceElement.placeholder = MIN_FOR_HOTEL;
+        priceElement.min = MinPriceDictionary.MIN_FOR_HOTEL;
+        priceElement.placeholder = MinPriceDictionary.MIN_FOR_HOTEL;
         break;
       case 'house':
-        priceElement.min = MIN_FOR_HOUSE;
-        priceElement.placeholder = MIN_FOR_HOUSE;
+        priceElement.min = MinPriceDictionary.MIN_FOR_HOUSE;
+        priceElement.placeholder = MinPriceDictionary.MIN_FOR_HOUSE;
         break;
       case 'palace':
-        priceElement.min = MIN_FOR_PALACE;
-        priceElement.placeholder = MIN_FOR_PALACE;
+        priceElement.min = MinPriceDictionary.MIN_FOR_PALACE;
+        priceElement.placeholder = MinPriceDictionary.MIN_FOR_PALACE;
         break;
       case 'flat':
-        priceElement.min = MIN_FOR_FLAT;
-        priceElement.placeholder = MIN_FOR_FLAT;
+        priceElement.min = MinPriceDictionary.MIN_FOR_FLAT;
+        priceElement.placeholder = MinPriceDictionary.MIN_FOR_FLAT;
         break;
     }
   });
@@ -74,10 +74,10 @@ setMinPriceListener();
 
 noUiSlider.create(sliderElement, {
   range: {
-    min: MIN_FOR_FLAT,
+    min: MinPriceDictionary.MIN_FOR_FLAT,
     max: MAX_PRICE,
   },
-  start: MIN_FOR_FLAT,
+  start: MinPriceDictionary.MIN_FOR_FLAT,
   step: SLIDER_STEP,
   connect: 'lower',
   format: {
@@ -99,41 +99,41 @@ typeElement.addEventListener('change', (evt) => {
     case 'bungalow':
       sliderElement.noUiSlider.updateOptions({
         range: {
-          min: MIN_FOR_BUNGALO,
+          min: MinPriceDictionary.MIN_FOR_BUNGALO,
         },
-        start: MIN_FOR_BUNGALO,
+        start: MinPriceDictionary.MIN_FOR_BUNGALO,
       });
       break;
     case 'hotel':
       sliderElement.noUiSlider.updateOptions({
         range: {
-          min: MIN_FOR_HOTEL,
+          min: MinPriceDictionary.MIN_FOR_HOTEL,
         },
-        start: MIN_FOR_HOTEL,
+        start: MinPriceDictionary.MIN_FOR_HOTEL,
       });
       break;
     case 'house':
       sliderElement.noUiSlider.updateOptions({
         range: {
-          min: MIN_FOR_HOUSE,
+          min: MinPriceDictionary.MIN_FOR_HOUSE,
         },
-        start: MIN_FOR_HOUSE,
+        start: MinPriceDictionary.MIN_FOR_HOUSE,
       });
       break;
     case 'palace':
       sliderElement.noUiSlider.updateOptions({
         range: {
-          min: MIN_FOR_PALACE,
+          min: MinPriceDictionary.MIN_FOR_PALACE,
         },
-        start: MIN_FOR_PALACE,
+        start: MinPriceDictionary.MIN_FOR_PALACE,
       });
       break;
     case 'flat':
       sliderElement.noUiSlider.updateOptions({
         range: {
-          min: MIN_FOR_PALACE,
+          min: MinPriceDictionary.MIN_FOR_PALACE,
         },
-        start: MIN_FOR_FLAT,
+        start: MinPriceDictionary.MIN_FOR_FLAT,
       });
       break;
   }
@@ -158,13 +158,9 @@ const validateCapacity = () => {
   }
 };
 
-const validateAddress = () => addressElement.value;
-validateAddress();
-console.log(validateAddress());
 
 pristine.addValidator(priceElement, validatePrice, 'Меньше допустимого значения');
 pristine.addValidator(capacityElement, validateCapacity, 'Недопустимое количество гостей');
-pristine.addValidator(addressElement, validateAddress, 'Обязательное поле');
 
 const sendOnSuccess = () => {
   getMessageSuccess();
@@ -175,10 +171,9 @@ const showError = () => {
   getMessageError();
 };
 
-const isValid = pristine.validate();
-
 formElement.addEventListener('submit', (evt) => {
   evt.preventDefault();
+  const isValid = pristine.validate();
 
   if (isValid) {
     const formData = new FormData(evt.target);

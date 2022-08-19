@@ -1,5 +1,3 @@
-import {getMessageSuccess} from './messages.js';
-
 const getData = async (onSuccess, onFail) => {
   try {
     const response = await fetch(
@@ -23,7 +21,7 @@ const sendData = async (onSuccess, onFail, body) => {
       'https://26.javascript.pages.academy/keksobooking',
       {
         mathod: 'POST',
-        body,
+        body: body,
       }
     );
 
@@ -32,7 +30,6 @@ const sendData = async (onSuccess, onFail, body) => {
     }
 
     onSuccess();
-    getMessageSuccess();
   } catch (error) {
     onFail(error.message);
   }

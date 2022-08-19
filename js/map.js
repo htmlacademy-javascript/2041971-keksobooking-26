@@ -2,6 +2,7 @@ import {activatePage} from './form.js';
 import {formElement} from './validation.js';
 import {renderCards} from './popup.js';
 import {showAlert} from './util.js';
+//import {pristine} from './validation.js';
 
 const ADDRESS_DEFAULT = {
   lat: 35.68950,

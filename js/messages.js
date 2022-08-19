@@ -14,4 +14,5 @@ const getMessageError = () => {
   const message = messageTemplateElement.cloneNode(true);
   body.append(message);
 };
+
 export {getMessageSuccess, getMessageError};
