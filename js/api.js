@@ -1,4 +1,4 @@
-import { getMessageSuccess } from './messages.js';
+import {getMessageSuccess} from './messages.js';
 
 const getData = async (onSuccess, onFail) => {
   try {
@@ -37,5 +37,6 @@ const sendData = async (onSuccess, onFail, body) => {
     onFail(error.message);
   }
 };
+
 
 export {getData, sendData};

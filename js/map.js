@@ -1,7 +1,7 @@
 import {activatePage} from './form.js';
 import {formElement} from './validation.js';
-//import {cardHotels} from './data.js';
 import {renderCards} from './popup.js';
+import {showAlert} from './util.js';
 
 const ADDRESS_DEFAULT = {
   lat: 35.68950,
@@ -88,10 +88,13 @@ const getMap = (data) => {
       .addTo(markerGroup)
       .bindPopup(renderCards(hotel));
   };
-
-  data.forEach((hotel) => {
-    getOrdinaryMarkers(hotel);
-  });
+  if (data) {
+    data.forEach((hotel) => {
+      getOrdinaryMarkers(hotel);
+    });
+  } else {
+    showAlert('Не удалось загрузить объявления');
+  }
 };
 
 export {getMap};

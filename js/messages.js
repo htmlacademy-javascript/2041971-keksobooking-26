@@ -6,4 +6,12 @@ const getMessageSuccess = () => {
   const message = messageTemplateElement.cloneNode(true);
   body.append(message);
 };
-export {getMessageSuccess};
+
+const getMessageError = () => {
+  const messageTemplateElement = document.querySelector('#error')
+    .content
+    .querySelector('.error');
+  const message = messageTemplateElement.cloneNode(true);
+  body.append(message);
+};
+export {getMessageSuccess, getMessageError};

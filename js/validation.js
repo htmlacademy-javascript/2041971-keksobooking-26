@@ -1,3 +1,6 @@
+import {sendData} from './api.js';
+import {getMessageSuccess, getMessageError} from './messages.js';
+
 const COMMERCIAL_ROOM = '100';
 const NOT_FOR_GUESTS = '0';
 const MAX_PRICE = 100000;
@@ -18,6 +21,9 @@ const timeOutElement = formElement.querySelector('#timeout');
 const roomNumberElement = formElement.querySelector('#room_number');
 const capacityElement = formElement.querySelector('#capacity');
 const sliderElement = formElement.querySelector('.ad-form__slider');
+const addressElement = formElement.querySelector('#address');
+console.log(addressElement.value);
+//const submitButtonElement = formElement.querySelector('.ad-form__submit');
 
 timeInElement.addEventListener('change', () => {
   timeOutElement.value = timeInElement.value;
@@ -152,18 +158,32 @@ const validateCapacity = () => {
   }
 };
 
+const validateAddress = () => addressElement.value;
+validateAddress();
+console.log(validateAddress());
+
 pristine.addValidator(priceElement, validatePrice, 'Меньше допустимого значения');
 pristine.addValidator(capacityElement, validateCapacity, 'Недопустимое количество гостей');
+pristine.addValidator(addressElement, validateAddress, 'Обязательное поле');
 
-const setUserFormSubmit = (onSuccess) => {
-  formElement.addEventListener('submit', (evt) => {
-    evt.preventDefault();
-    const isValid = pristine.validate();
-    if (isValid) {
-      const formData = new FormData(evt.target);
-    } else {
-      console.log('Форма невалидна');
-    }
-  });
+const sendOnSuccess = () => {
+  getMessageSuccess();
+  formElement.reset();
 };
+
+const showError = () => {
+  getMessageError();
+};
+
+const isValid = pristine.validate();
+
+formElement.addEventListener('submit', (evt) => {
+  evt.preventDefault();
+
+  if (isValid) {
+    const formData = new FormData(evt.target);
+    sendData(sendOnSuccess, showError, formData);
+  }
+});
+
 export {formElement};
