@@ -36,6 +36,7 @@ timeOutElement.addEventListener('change', () => {
 const pristine = new Pristine(formElement, {
   classTo: 'ad-form__element',
   errorTextParent: 'ad-form__element',
+  errorClass: 'has-danger',
 });
 
 priceElement.min = MinPriceDictionary.MIN_FOR_FLAT;
@@ -170,11 +171,11 @@ const sendOnSuccess = () => {
 const showError = () => {
   getMessageError();
 };
+pristine.validate();
 
 formElement.addEventListener('submit', (evt) => {
   evt.preventDefault();
   const isValid = pristine.validate();
-
   if (isValid) {
     const formData = new FormData(evt.target);
     sendData(sendOnSuccess, showError, formData);
