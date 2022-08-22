@@ -1,8 +1,6 @@
 import {activatePage} from './form.js';
-import {formElement} from './validation.js';
 import {renderCards} from './popup.js';
-import {showAlert} from './util.js';
-//import {pristine} from './validation.js';
+import {showAlert} from './utils.js';
 
 const ADDRESS_DEFAULT = {
   lat: 35.68950,
@@ -22,20 +20,50 @@ const Url = {
   MAIN_ICON: './img/main-pin.svg',
   ORDINARY_ICON: './img/pin.svg',
 };
+const MAP_CANVAS = 'map-canvas';
+
+const formElement = document.querySelector('.ad-form');
 const addressElement = formElement.querySelector('#address');
+const map = L.map(MAP_CANVAS);
+
+const mainPinIcon = L.icon({
+  iconUrl: Url.MAIN_ICON,
+  iconSize: IconSize.MAIN_SIZE,
+  iconAnchor: IconSize.MAIN_ANCHOR,
+});
+
+const mainPinMarker = L.marker(
+  ADDRESS_DEFAULT,
+  {
+    draggable: true,
+    icon: mainPinIcon,
+  },
+);
+
+const ordinaryPinIcon = L.icon({
+  iconUrl: Url.ORDINARY_ICON,
+  iconSize: IconSize.ORDINARY_SIZE,
+  iconAnchor: IconSize.ORDINARY_ANCHOR,
+});
+
+const getAddress = (coordinates) => {
+  addressElement.value = Object.values(coordinates).map((coordinate) => coordinate.toFixed(DIGITS));
+};
+
+const loadMap = ()  => {
+  activatePage();
+  getAddress(ADDRESS_DEFAULT);
+};
+
+const moveendMainPinMarker = (evt) => {
+  const coordinates = evt.target.getLatLng();
+  getAddress(coordinates);
+};
+
 
 const getMap = (data) => {
-  const getAddress = (coordinates) => {
-    addressElement.value = Object.values(coordinates).map((coordinate) => coordinate.toFixed(DIGITS));
-  };
-
-  const map = L.map('map-canvas')
-    .on('load', () => {
-      activatePage();
-      getAddress(ADDRESS_DEFAULT);
-    })
+  map.on('load', loadMap)
     .setView(ADDRESS_DEFAULT, SCALE);
-
 
   L.tileLayer(
     Url.TILE_LAYER,
@@ -44,32 +72,8 @@ const getMap = (data) => {
     },
   ).addTo(map);
 
-  const mainPinIcon = L.icon({
-    iconUrl: Url.MAIN_ICON,
-    iconSize: IconSize.MAIN_SIZE,
-    iconAnchor: IconSize.MAIN_ANCHOR,
-  });
-
-  const mainPinMarker = L.marker(
-    ADDRESS_DEFAULT,
-    {
-      draggable: true,
-      icon: mainPinIcon,
-    },
-  );
-
   mainPinMarker.addTo(map);
-
-  mainPinMarker.on('moveend', (evt) => {
-    const coordinates = evt.target.getLatLng();
-    getAddress(coordinates);
-  });
-
-  const ordinaryPinIcon = L.icon({
-    iconUrl: Url.ORDINARY_ICON,
-    iconSize: IconSize.ORDINARY_SIZE,
-    iconAnchor: IconSize.ORDINARY_ANCHOR,
-  });
+  mainPinMarker.on('moveend', moveendMainPinMarker);
 
   const markerGroup = L.layerGroup().addTo(map);
 
@@ -98,4 +102,19 @@ const getMap = (data) => {
   }
 };
 
-export {getMap};
+const resetMap = () => {
+  map.setView(
+    {
+      lat: ADDRESS_DEFAULT.lat,
+      lng: ADDRESS_DEFAULT.lng,
+    });
+  mainPinMarker.setLatLng(
+    {
+      lat: ADDRESS_DEFAULT.lat,
+      lng: ADDRESS_DEFAULT.lng,
+    }, SCALE);
+  map.closePopup();
+  getAddress(ADDRESS_DEFAULT);
+};
+
+export {getMap, resetMap};

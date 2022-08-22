@@ -2,14 +2,6 @@ const formElement = document.querySelector('.ad-form');
 const fieldsetElements = formElement.querySelectorAll('fieldset');
 const mapFiltersFormElement = document.querySelector('.map__filters');
 const mapFiltersSelectElements = mapFiltersFormElement.querySelectorAll('select');
-const submitButtonElement = formElement.querySelector('.ad-form__submit');
-
-const sendForm = () => {
-  submitButtonElement.addEventListener('click', (evt) => {
-    evt.preventDefault();
-  });
-};
-sendForm();
 
 const deactivatePage = () => {
   formElement.classList.add('ad-form--disabled');

@@ -13,7 +13,13 @@ const getRandomPositiveInteger = (firstNumber, secondNumber) => {
   const result = Math.random() * (max - min + 1) + min;
   return Math.floor(result);
 };
-
+const setElementValue = (data, element, attribute) => {
+  if (data) {
+    element[attribute] = data;
+  } else {
+    element.remove();
+  }
+};
 const showAlert = (message) => {
   const alertContainer = document.createElement('div');
   alertContainer.style.zIndex = '100';
@@ -35,4 +41,6 @@ const showAlert = (message) => {
   }, ALERT_SHOW_TIME);
 };
 
-export {getRandomPositiveFloat, getRandomPositiveInteger, showAlert};
+const isEscapeKey = (evt) => evt.key === 'Escape';
+
+export {getRandomPositiveFloat, getRandomPositiveInteger, setElementValue, showAlert, isEscapeKey};

@@ -1,13 +1,4 @@
-const cardTemplateElement = document.querySelector('#card')
-  .content
-  .querySelector('.popup');
-const setElementValue = (data, element, attribute) => {
-  if (data) {
-    element[attribute] = data;
-  } else {
-    element.remove();
-  }
-};
+import {setElementValue} from './utils.js';
 const HtmlAttribute = {
   TEXT_CONTENT: 'textContent',
   SRC: 'src',
@@ -22,8 +13,11 @@ const GuestVariations = {
   DEFAULT_GUESTS: ' гостей',
 };
 
-const renderCards = (hotel) => {
+const cardTemplateElement = document.querySelector('#card')
+  .content
+  .querySelector('.popup');
 
+const renderCards = (hotel) => {
   const cardElement = cardTemplateElement.cloneNode(true);
   const popupTypeElement = cardElement.querySelector('.popup__type');
   const popupPhotosElement =  cardElement.querySelector('.popup__photos');
@@ -38,13 +32,7 @@ const renderCards = (hotel) => {
   setElementValue(hotel.offer.description, cardElement.querySelector('.popup__description'), HtmlAttribute.TEXT_CONTENT);
   setElementValue(hotel.author.avatar, cardElement.querySelector('.popup__avatar'), HtmlAttribute.SRC);
 
-  if (hotel.offer.price) {
-    popupPriceElement.textContent = `${hotel.offer.price} ₽/ночь`;
-  } else {
-    popupPriceElement.remove();
-  }
-
-  if (hotel.offer.rooms && hotel.offer.guests) {
+  const getRoomsVariation = () => {
     switch (hotel.offer.rooms) {
       case 1:
         hotel.offer.rooms += RoomVariations.ONE_ROOM;
@@ -55,7 +43,8 @@ const renderCards = (hotel) => {
       default:
         hotel.offer.rooms += RoomVariations.DEFAULT_ROOMS;
     }
-
+  };
+  const getGuestsVariation = () => {
     switch (hotel.offer.guests) {
       case 1:
         hotel.offer.guests += GuestVariations.ONE_GUEST;
@@ -63,6 +52,17 @@ const renderCards = (hotel) => {
       default:
         hotel.offer.guests += GuestVariations.DEFAULT_GUESTS;
     }
+  };
+
+  if (hotel.offer.price) {
+    popupPriceElement.textContent = `${hotel.offer.price} ₽/ночь`;
+  } else {
+    popupPriceElement.remove();
+  }
+
+  if (hotel.offer.rooms && hotel.offer.guests) {
+    getRoomsVariation();
+    getGuestsVariation();
     popupCapacityElement.textContent = `${hotel.offer.rooms} для ${hotel.offer.guests} `;
   } else {
     popupCapacityElement.remove();

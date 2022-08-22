@@ -1039,3 +1039,8 @@ fieldset {
 .ad-form__element .pristine-error {
   color: red;
 }
+
+.ad-form__element--capacity .pristine-error,
+.ad-form__element--price .pristine-error {
+  margin-left: -100%;
+}

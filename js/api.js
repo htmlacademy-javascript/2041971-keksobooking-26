@@ -20,7 +20,7 @@ const sendData = async (onSuccess, onFail, body) => {
     const response = await fetch(
       'https://26.javascript.pages.academy/keksobooking',
       {
-        mathod: 'POST',
+        method: 'POST',
         body: body,
       }
     );
@@ -28,10 +28,9 @@ const sendData = async (onSuccess, onFail, body) => {
     if (!response.ok) {
       throw new Error('Не удалось отправить форму. Попробуйте еще раз');
     }
-
     onSuccess();
   } catch (error) {
-    onFail(error.message);
+    onFail(error);
   }
 };
 
