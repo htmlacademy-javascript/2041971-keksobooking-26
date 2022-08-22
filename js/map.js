@@ -21,7 +21,7 @@ const Url = {
   ORDINARY_ICON: './img/pin.svg',
 };
 const MAP_CANVAS = 'map-canvas';
-
+const HOTEL_COUNT = 10;
 const formElement = document.querySelector('.ad-form');
 const addressElement = formElement.querySelector('#address');
 const map = L.map(MAP_CANVAS);
@@ -60,6 +60,23 @@ const moveendMainPinMarker = (evt) => {
   getAddress(coordinates);
 };
 
+const getOrdinaryMarkers = (hotel) => {
+  const markerGroup = L.layerGroup().addTo(map);
+  const lat = hotel.location.lat;
+  const lng = hotel.location.lng;
+  const marker = L.marker(
+    {
+      lat,
+      lng,
+    },
+    {
+      ordinaryPinIcon,
+    },
+  );
+  marker
+    .addTo(markerGroup)
+    .bindPopup(renderCards(hotel));
+};
 
 const getMap = (data) => {
   map.on('load', loadMap)
@@ -75,26 +92,8 @@ const getMap = (data) => {
   mainPinMarker.addTo(map);
   mainPinMarker.on('moveend', moveendMainPinMarker);
 
-  const markerGroup = L.layerGroup().addTo(map);
-
-  const getOrdinaryMarkers = (hotel) => {
-    const lat = hotel.location.lat;
-    const lng = hotel.location.lng;
-    const marker = L.marker(
-      {
-        lat,
-        lng,
-      },
-      {
-        ordinaryPinIcon,
-      },
-    );
-    marker
-      .addTo(markerGroup)
-      .bindPopup(renderCards(hotel));
-  };
   if (data) {
-    data.forEach((hotel) => {
+    data.slice(0, HOTEL_COUNT).forEach((hotel) => {
       getOrdinaryMarkers(hotel);
     });
   } else {
@@ -117,4 +116,4 @@ const resetMap = () => {
   getAddress(ADDRESS_DEFAULT);
 };
 
-export {getMap, resetMap};
+export {getMap, resetMap, getOrdinaryMarkers};
