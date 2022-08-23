@@ -1,11 +1,18 @@
+const Url = {
+  GET: 'https://26.javascript.pages.academy/keksobooking/data',
+  SEND: 'https://26.javascript.pages.academy/keksobooking',
+};
+const ErrorMessage = {
+  GET_ERROR:'Не удалось загрузить объявления',
+  SEND_ERROR: 'Не удалось отправить форму. Попробуйте еще раз'
+};
+
 const getData = async (onSuccess, onFail) => {
   try {
-    const response = await fetch(
-      'https://26.javascript.pages.academy/keksobooking/data'
-    );
+    const response = await fetch(Url.GET);
 
     if (!response.ok) {
-      throw new Error('Не удалось загрузить объявления');
+      throw new Error(ErrorMessage.GET_ERROR);
     }
 
     const offers = await response.json();
@@ -18,7 +25,7 @@ const getData = async (onSuccess, onFail) => {
 const sendData = async (onSuccess, onFail, body) => {
   try {
     const response = await fetch(
-      'https://26.javascript.pages.academy/keksobooking',
+      Url.SEND,
       {
         method: 'POST',
         body: body,
@@ -26,7 +33,7 @@ const sendData = async (onSuccess, onFail, body) => {
     );
 
     if (!response.ok) {
-      throw new Error('Не удалось отправить форму. Попробуйте еще раз');
+      throw new Error(Url.SEND_ERROR);
     }
     onSuccess();
   } catch (error) {

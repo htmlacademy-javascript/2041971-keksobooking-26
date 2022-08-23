@@ -6,8 +6,6 @@ const ADDRESS_DEFAULT = {
   lat: 35.68950,
   lng: 139.69171,
 };
-const SCALE = 10;
-const DIGITS = 5;
 const IconSize = {
   MAIN_SIZE: [52, 52],
   MAIN_ANCHOR: [26, 52],
@@ -20,10 +18,13 @@ const Url = {
   MAIN_ICON: './img/main-pin.svg',
   ORDINARY_ICON: './img/pin.svg',
 };
+const SCALE = 10;
+const DIGITS = 5;
 const MAP_CANVAS = 'map-canvas';
 const HOTEL_COUNT = 10;
 const formElement = document.querySelector('.ad-form');
 const addressElement = formElement.querySelector('#address');
+
 const map = L.map(MAP_CANVAS);
 
 const mainPinIcon = L.icon({
@@ -47,7 +48,7 @@ const ordinaryPinIcon = L.icon({
 });
 
 const getAddress = (coordinates) => {
-  addressElement.value = Object.values(coordinates).map((coordinate) => coordinate.toFixed(DIGITS));
+  addressElement.value = `${coordinates.lat.toFixed(DIGITS)},${coordinates.lng.toFixed(DIGITS)}`;
 };
 
 const loadMap = ()  => {
@@ -59,9 +60,9 @@ const moveendMainPinMarker = (evt) => {
   const coordinates = evt.target.getLatLng();
   getAddress(coordinates);
 };
+const markerGroup = L.layerGroup().addTo(map);
 
 const getOrdinaryMarkers = (hotel) => {
-  const markerGroup = L.layerGroup().addTo(map);
   const lat = hotel.location.lat;
   const lng = hotel.location.lng;
   const marker = L.marker(
@@ -116,4 +117,6 @@ const resetMap = () => {
   getAddress(ADDRESS_DEFAULT);
 };
 
-export {getMap, resetMap, getOrdinaryMarkers};
+const clearMap = () => markerGroup.clearLayers();
+
+export {getMap, resetMap, getOrdinaryMarkers, clearMap};

@@ -30,8 +30,8 @@ const pristine = new Pristine(formElement, {
 }, );
 
 const validatePrice = () => {
-  priceElement.addEventListener('input', () => +priceElement.value >= +priceElement.min);
-  return +priceElement.value >= +priceElement.min;
+  priceElement.addEventListener('input', () => Number(priceElement.value) >= Number(priceElement.min));
+  return Number(priceElement.value) >= Number(priceElement.min);
 };
 
 const validateCapacity = () => {

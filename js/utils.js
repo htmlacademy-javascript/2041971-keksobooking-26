@@ -1,4 +1,5 @@
 const ALERT_SHOW_TIME = 5000;
+const RERENDER_DELAY = 500;
 
 const getRandomPositiveFloat = (firstNumber, secondNumber, digits = 1) => {
   const min = Math.min(Math.abs(firstNumber), Math.abs(secondNumber));
@@ -13,6 +14,7 @@ const getRandomPositiveInteger = (firstNumber, secondNumber) => {
   const result = Math.random() * (max - min + 1) + min;
   return Math.floor(result);
 };
+
 const setElementValue = (data, element, attribute) => {
   if (data) {
     element[attribute] = data;
@@ -20,6 +22,7 @@ const setElementValue = (data, element, attribute) => {
     element.remove();
   }
 };
+
 const showAlert = (message) => {
   const alertContainer = document.createElement('div');
   alertContainer.style.zIndex = '100';
@@ -43,4 +46,13 @@ const showAlert = (message) => {
 
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
-export {getRandomPositiveFloat, getRandomPositiveInteger, setElementValue, showAlert, isEscapeKey};
+const debounce = (callback, timeoutDelay = RERENDER_DELAY) => {
+  let timeoutId;
+
+  return (...rest) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
+  };
+};
+
+export {getRandomPositiveFloat, getRandomPositiveInteger, setElementValue, showAlert, isEscapeKey, debounce};
