@@ -1,8 +1,8 @@
-import {clearMap, getOrdinaryMarkers} from './map.js';
+import {renderMarkers} from './map.js';
 import {debounce} from './utils.js';
 
 const FILTER_DEFAULT = 'any';
-const ADS_COUNT = 10;
+const HOTELS_COUNT = 10;
 
 const Price = {
   MEDIUM: 10000,
@@ -14,58 +14,38 @@ const housingTipeElement = mapFiltersFormElement.querySelector('#housing-type');
 const housingPriceElement = mapFiltersFormElement.querySelector('#housing-price');
 const housingRoomsElement = mapFiltersFormElement.querySelector('#housing-rooms');
 const housingGuestsElement = mapFiltersFormElement.querySelector('#housing-guests');
-//const housingFeaturesElement = mapFiltersFormElement.querySelector('#housing-features');
 
-const typeFilter = (hotel, type) => type === FILTER_DEFAULT || type === hotel.offer.type;
-
-const roomsFilter = (hotel, rooms) => rooms === FILTER_DEFAULT || parseInt(rooms, 10) === hotel.offer.rooms;
-
-const guestsFilter = (hotel, guests) => guests === FILTER_DEFAULT || parseInt(guests, 10) === hotel.offer.guests;
-
-const priceFilter = (hotel, price) => {
-  switch (price) {
+const filterByTipe = (type) => housingTipeElement.value === FILTER_DEFAULT || housingTipeElement.value === type;
+const filterByRoom = (rooms) => housingRoomsElement.value === FILTER_DEFAULT || Number(housingRoomsElement.value) === rooms;
+const filterByGuests = (guests) => housingGuestsElement.value === FILTER_DEFAULT || Number(housingGuestsElement.value) === guests;
+const filterByPrice = (price) => {
+  switch (housingPriceElement.value) {
     case FILTER_DEFAULT:
       return true;
     case 'low':
-      return hotel.offer.price < Price.MEDIUM;
+      return price < Price.MEDIUM;
     case 'middle':
-      return (hotel.offer.price < Price.HIGH && hotel.offer.price >= Price.MEDIUM);
+      return (price < Price.HIGH && price >= Price.MEDIUM);
     case 'high':
-      return hotel.offer.price > Price.HIGH;
+      return price > Price.HIGH;
   }
 };
-
-const featuresFilter = (hotel, selectedFeatures) => {
-  if (!selectedFeatures.length) {
-    return true;
+const filterByFeatures = (features) => {
+  const checkBoxFeatures = mapFiltersFormElement.querySelectorAll('.map__features :checked');
+  if (checkBoxFeatures.length && features) {
+    return Array.from(checkBoxFeatures).every((checkFeatures) => features.includes(checkFeatures.value));
   }
-
-  if (hotel.offer.features) {
-    return Array.from(selectedFeatures).every((element) => !hotel.offer.features.includes(element.value));
-  }
-  return false;
-};
-
-const filterAds = (data) => {
-  const selectedType = housingTipeElement.value;
-  const selectedRooms = housingRoomsElement.value;
-  const selectedGuests = housingGuestsElement.value;
-  const selectedPrice = housingPriceElement.value;
-  const selectedFeatures = Array.from(mapFiltersFormElement.querySelectorAll('input[type="checkbox"]:checked'));
-
-  return data
-    .filter((hotel) => typeFilter(hotel, selectedType)
-      && roomsFilter(hotel, selectedRooms)
-      && guestsFilter(hotel, selectedGuests)
-      && priceFilter(hotel, selectedPrice)
-      && featuresFilter(hotel, selectedFeatures))
-    .slice(0, ADS_COUNT);
+  return checkBoxFeatures.length === 0;
 };
 
 const onFilterChange = (data) => {
-  clearMap();
-  const matchedAds = filterAds(data);
-  getOrdinaryMarkers(matchedAds);
+  const filteredOffers = data.filter(({offer}) => filterByTipe(offer.type)
+      && filterByRoom(offer.rooms)
+      && filterByGuests(offer.guests)
+      && filterByPrice(offer.price)
+      && filterByFeatures(offer.features));
+  renderMarkers(filteredOffers.slice(0, HOTELS_COUNT));
+
 };
 
 const initFilter = (data) => {

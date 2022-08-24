@@ -1,19 +1,20 @@
-import {deactivatePage, activateFilters} from './form.js';
+import {deactivatePage} from './form.js';
 import {initiateSlider} from './slider.js';
 import './validation.js';
-import {getMap} from './map.js';
+import {initFilter} from './filters.js';
 import {getData} from './api.js';
-import './filters.js';
+import {getMap} from './map.js';
 
 deactivatePage();
 initiateSlider();
-const onGetDataSuccess = (data) => {
+
+const getDataSuccess = (data) => {
   getMap(data);
-  activateFilters();
+  initFilter(data);
 };
 
-const onGetDataOnFail = () => {
+const getDataOnFail = () => {
   getMap();
 };
 
-getData(onGetDataSuccess, onGetDataOnFail);
+getData(getDataSuccess, getDataOnFail);

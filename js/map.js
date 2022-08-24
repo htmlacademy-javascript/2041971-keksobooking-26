@@ -26,6 +26,7 @@ const formElement = document.querySelector('.ad-form');
 const addressElement = formElement.querySelector('#address');
 
 const map = L.map(MAP_CANVAS);
+const markerGroup = L.layerGroup().addTo(map);
 
 const mainPinIcon = L.icon({
   iconUrl: Url.MAIN_ICON,
@@ -60,7 +61,6 @@ const moveendMainPinMarker = (evt) => {
   const coordinates = evt.target.getLatLng();
   getAddress(coordinates);
 };
-const markerGroup = L.layerGroup().addTo(map);
 
 const getOrdinaryMarkers = (hotel) => {
   const lat = hotel.location.lat;
@@ -77,6 +77,12 @@ const getOrdinaryMarkers = (hotel) => {
   marker
     .addTo(markerGroup)
     .bindPopup(renderCards(hotel));
+};
+
+const renderMarkers = (offers) => {
+  map.closePopup();
+  markerGroup.clearLayers();
+  offers.forEach(getOrdinaryMarkers);
 };
 
 const getMap = (data) => {
@@ -117,6 +123,4 @@ const resetMap = () => {
   getAddress(ADDRESS_DEFAULT);
 };
 
-const clearMap = () => markerGroup.clearLayers();
-
-export {getMap, resetMap, getOrdinaryMarkers, clearMap};
+export {getMap, resetMap, renderMarkers};

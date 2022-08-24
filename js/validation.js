@@ -83,6 +83,7 @@ const showError = () => {
   unblockSubmitButton();
   getMessageError();
 };
+//pristine.validate();
 
 formElement.addEventListener('submit', (evt) => {
   evt.preventDefault();
