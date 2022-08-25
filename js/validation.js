@@ -48,9 +48,18 @@ const validateCapacity = () => {
   }
 };
 
+const onRoomsChange = () => {
+  pristine.validate(capacityElement);
+  pristine.validate(roomNumberElement);
+};
+
+
 pristine.addValidator(priceElement, validatePrice, 'Меньше допустимого значения');
 pristine.addValidator(capacityElement, validateCapacity, 'Недопустимое количество гостей');
 pristine.addValidator(roomNumberElement, validateCapacity, 'Недопустимое количество комнат');
+
+capacityElement.addEventListener('change', onRoomsChange);
+roomNumberElement.addEventListener('change', onRoomsChange);
 
 const onFormReset = () => {
   formElement.reset();
@@ -83,7 +92,7 @@ const showError = () => {
   unblockSubmitButton();
   getMessageError();
 };
-//pristine.validate();
+pristine.validate();
 
 formElement.addEventListener('submit', (evt) => {
   evt.preventDefault();

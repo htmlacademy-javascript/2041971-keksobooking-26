@@ -4,6 +4,7 @@ import './validation.js';
 import {initFilter} from './filters.js';
 import {getData} from './api.js';
 import {getMap} from './map.js';
+import './add-photo.js';
 
 deactivatePage();
 initiateSlider();
