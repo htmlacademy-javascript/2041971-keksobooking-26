@@ -1,3 +1,5 @@
+import {initPhoto} from './add-photo.js';
+
 const formElement = document.querySelector('.ad-form');
 const fieldsetElements = formElement.querySelectorAll('fieldset');
 const mapFiltersFormElement = document.querySelector('.map__filters');
@@ -19,6 +21,7 @@ const activateFilters = () => {
 };
 
 const activatePage = () => {
+  initPhoto();
   formElement.classList.remove('ad-form--disabled');
   fieldsetElements.forEach((element) => element.removeAttribute('disabled'));
   activateFilters();
