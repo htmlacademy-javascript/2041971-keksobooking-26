@@ -11,7 +11,6 @@ const timeInElement = formElement.querySelector('#timein');
 const timeOutElement = formElement.querySelector('#timeout');
 const roomNumberElement = formElement.querySelector('#room_number');
 const capacityElement = formElement.querySelector('#capacity');
-
 const submitButtonElement = formElement.querySelector('.ad-form__submit');
 const resetButtonElement = formElement.querySelector('.ad-form__reset');
 
@@ -29,10 +28,7 @@ const pristine = new Pristine(formElement, {
   errorClass: 'has-danger',
 }, );
 
-const validatePrice = () => {
-  priceElement.addEventListener('input', () => Number(priceElement.value) >= Number(priceElement.min));
-  return Number(priceElement.value) >= Number(priceElement.min);
-};
+const validatePrice = () => Number(priceElement.value) >= Number(priceElement.min);
 
 const validateCapacity = () => {
   const isValidCommercial = capacityElement.value === NOT_FOR_GUESTS &&
@@ -47,12 +43,10 @@ const validateCapacity = () => {
     return false;
   }
 };
-
 const onRoomsChange = () => {
   pristine.validate(capacityElement);
   pristine.validate(roomNumberElement);
 };
-
 
 pristine.addValidator(priceElement, validatePrice, 'Меньше допустимого значения');
 pristine.addValidator(capacityElement, validateCapacity, 'Недопустимое количество гостей');
@@ -92,6 +86,7 @@ const showError = () => {
   unblockSubmitButton();
   getMessageError();
 };
+
 pristine.validate();
 
 formElement.addEventListener('submit', (evt) => {
@@ -104,4 +99,4 @@ formElement.addEventListener('submit', (evt) => {
   }
 });
 
-export {formElement};
+export {pristine};

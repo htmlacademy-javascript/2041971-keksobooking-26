@@ -1,4 +1,5 @@
 import {setElementValue} from './utils.js';
+
 const HtmlAttribute = {
   TEXT_CONTENT: 'textContent',
   SRC: 'src',
@@ -11,6 +12,10 @@ const RoomVariations = {
 const GuestVariations = {
   ONE_GUEST: ' гостя',
   DEFAULT_GUESTS: ' гостей',
+};
+const RoomsNumber = {
+  ONE: 1,
+  HUNDRED: 100,
 };
 
 const cardTemplateElement = document.querySelector('#card')
@@ -34,10 +39,10 @@ const renderCards = (hotel) => {
 
   const getRoomsVariation = () => {
     switch (hotel.offer.rooms) {
-      case 1:
+      case RoomsNumber.ONE:
         hotel.offer.rooms += RoomVariations.ONE_ROOM;
         break;
-      case 100:
+      case RoomsNumber.HUNDRED:
         hotel.offer.rooms += RoomVariations.HUNDRED_ROOMS;
         break;
       default:

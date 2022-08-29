@@ -1,3 +1,5 @@
+import {pristine} from './validation.js';
+
 const MinPriceDictionary = {
   MIN_FOR_BUNGALO: 0,
   MIN_FOR_FLAT: 1000,
@@ -14,6 +16,8 @@ const sliderElement = formElement.querySelector('.ad-form__slider');
 const initiateSlider = () => {
   const typeElement = formElement.querySelector('#type');
   const priceElement = formElement.querySelector('#price');
+  priceElement.min = MinPriceDictionary.MIN_FOR_FLAT;
+
   noUiSlider.create(sliderElement, {
     range: {
       min: MinPriceDictionary.MIN_FOR_FLAT,
@@ -34,6 +38,7 @@ const initiateSlider = () => {
 
   sliderElement.noUiSlider.on('update', () => {
     priceElement.value = sliderElement.noUiSlider.get();
+    pristine.validate(priceElement);
   });
 
   const onTypeElementClick = (price) => {

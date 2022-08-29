@@ -1,12 +1,8 @@
 import {deactivatePage} from './form.js';
-import {initiateSlider} from './slider.js';
 import './validation.js';
 import {initFilter} from './filters.js';
 import {getData} from './api.js';
 import {getMap} from './map.js';
-
-deactivatePage();
-initiateSlider();
 
 const getDataSuccess = (data) => {
   getMap(data);
@@ -17,4 +13,6 @@ const getDataOnFail = () => {
   getMap();
 };
 
+deactivatePage();
 getData(getDataSuccess, getDataOnFail);
+
