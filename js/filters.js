@@ -3,12 +3,10 @@ import {debounce} from './utils.js';
 
 const FILTER_DEFAULT = 'any';
 const HOTELS_COUNT = 10;
-
 const Price = {
   MEDIUM: 10000,
   HIGH: 50000,
 };
-
 const mapFiltersFormElement = document.querySelector('.map__filters');
 const housingTipeElement = mapFiltersFormElement.querySelector('#housing-type');
 const housingPriceElement = mapFiltersFormElement.querySelector('#housing-price');
@@ -37,7 +35,6 @@ const filterByFeatures = (features) => {
   }
   return checkBoxFeatures.length === 0;
 };
-
 const onFilterChange = (data) => {
   const filteredOffers = data.filter(({offer}) => filterByTipe(offer.type)
       && filterByRoom(offer.rooms)
@@ -48,9 +45,8 @@ const onFilterChange = (data) => {
 
 };
 
-const initFilter = (data) => {
+const initiateFilter = (data) => {
   mapFiltersFormElement.addEventListener('change', debounce(() => onFilterChange(data)));
-  mapFiltersFormElement.addEventListener('reset', debounce(() => onFilterChange(data)));
 };
 
-export {initFilter};
+export {initiateFilter};

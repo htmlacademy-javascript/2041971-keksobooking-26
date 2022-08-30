@@ -1,11 +1,10 @@
 const FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
-
 const avatarChooserElement = document.querySelector('.ad-form-header__input');
 const avatarPrewiewElement = document.querySelector('.ad-form-header__preview img');
 const photoChooserElement = document.querySelector('.ad-form__input');
 const photoPrewiewElement = document.querySelector('.ad-form__photo');
 
-const initPhoto = () => {
+const initiatePhoto = () => {
   const photoImgElement = document.createElement('img');
   photoImgElement.alt = 'Фотогроафия жилья';
   photoImgElement.style.width = '70px';
@@ -34,4 +33,12 @@ const initPhoto = () => {
   photoChooserElement.addEventListener('change', onPhotoLoad);
 };
 
-export {initPhoto};
+const resetPhoto = () => {
+  const photoImgElement = photoPrewiewElement.querySelector('img');
+  avatarChooserElement.value = '';
+  photoChooserElement.value = '';
+  avatarPrewiewElement.src = 'img/muffin-grey.svg';
+  photoImgElement.src = '';
+};
+
+export {initiatePhoto, resetPhoto};

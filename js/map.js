@@ -18,7 +18,7 @@ const Url = {
   MAIN_ICON: './img/main-pin.svg',
   ORDINARY_ICON: './img/pin.svg',
 };
-const SCALE = 10;
+const SCALE = 12;
 const DIGITS = 5;
 const MAP_CANVAS = 'map-canvas';
 const HOTEL_COUNT = 10;
@@ -27,13 +27,11 @@ const addressElement = formElement.querySelector('#address');
 
 const map = L.map(MAP_CANVAS);
 const markerGroup = L.layerGroup().addTo(map);
-
 const mainPinIcon = L.icon({
   iconUrl: Url.MAIN_ICON,
   iconSize: IconSize.MAIN_SIZE,
   iconAnchor: IconSize.MAIN_ANCHOR,
 });
-
 const mainPinMarker = L.marker(
   ADDRESS_DEFAULT,
   {
@@ -42,27 +40,17 @@ const mainPinMarker = L.marker(
   },
 );
 
-const ordinaryPinIcon = L.icon({
-  iconUrl: Url.ORDINARY_ICON,
-  iconSize: IconSize.ORDINARY_SIZE,
-  iconAnchor: IconSize.ORDINARY_ANCHOR,
-});
-
 const getAddress = (coordinates) => {
   addressElement.value = `${coordinates.lat.toFixed(DIGITS)},${coordinates.lng.toFixed(DIGITS)}`;
 };
 
-const loadMap = ()  => {
-  activatePage();
-  getAddress(ADDRESS_DEFAULT);
-};
-
-const moveendMainPinMarker = (evt) => {
-  const coordinates = evt.target.getLatLng();
-  getAddress(coordinates);
-};
-
 const getOrdinaryMarkers = (hotel) => {
+  const ordinaryPinIcon = L.icon({
+    iconUrl: Url.ORDINARY_ICON,
+    iconSize: IconSize.ORDINARY_SIZE,
+    iconAnchor: IconSize.ORDINARY_ANCHOR,
+  });
+
   const lat = hotel.location.lat;
   const lng = hotel.location.lng;
   const marker = L.marker(
@@ -86,6 +74,15 @@ const renderMarkers = (offers) => {
 };
 
 const getMap = (data) => {
+  const loadMap = ()  => {
+    activatePage();
+    getAddress(ADDRESS_DEFAULT);
+  };
+  const moveendMainPinMarker = (evt) => {
+    const coordinates = evt.target.getLatLng();
+    getAddress(coordinates);
+  };
+
   map.on('load', loadMap)
     .setView(ADDRESS_DEFAULT, SCALE);
 
@@ -109,16 +106,8 @@ const getMap = (data) => {
 };
 
 const resetMap = () => {
-  map.setView(
-    {
-      lat: ADDRESS_DEFAULT.lat,
-      lng: ADDRESS_DEFAULT.lng,
-    });
-  mainPinMarker.setLatLng(
-    {
-      lat: ADDRESS_DEFAULT.lat,
-      lng: ADDRESS_DEFAULT.lng,
-    }, SCALE);
+  map.setView(ADDRESS_DEFAULT, SCALE);
+  mainPinMarker.setLatLng(ADDRESS_DEFAULT);
   map.closePopup();
   getAddress(ADDRESS_DEFAULT);
 };

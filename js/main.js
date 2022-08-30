@@ -1,15 +1,17 @@
-import {deactivatePage} from './form.js';
+import {deactivatePage, activateFilters} from './form.js';
 import './validation.js';
-import {initFilter} from './filters.js';
+import {initiateFilter} from './filters.js';
 import {getData} from './api.js';
 import {getMap} from './map.js';
 
 const getDataSuccess = (data) => {
   getMap(data);
-  initFilter(data);
+  activateFilters();
+  initiateFilter(data);
 };
 
 const getDataOnFail = () => {
+  deactivatePage();
   getMap();
 };
 

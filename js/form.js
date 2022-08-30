@@ -1,4 +1,4 @@
-import {initPhoto} from './add-photo.js';
+import {initiatePhoto} from './add-photo.js';
 import {initiateSlider} from './slider.js';
 
 const formElement = document.querySelector('.ad-form');
@@ -23,11 +23,9 @@ const activateFilters = () => {
 
 const activatePage = () => {
   initiateSlider();
-  initPhoto();
+  initiatePhoto();
   formElement.classList.remove('ad-form--disabled');
   fieldsetElements.forEach((element) => element.removeAttribute('disabled'));
-  activateFilters();
 };
-
 
 export {deactivatePage, activateFilters, activatePage};

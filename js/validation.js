@@ -2,6 +2,7 @@ import {sendData} from './api.js';
 import {getMessageSuccess, getMessageError} from './messages.js';
 import {resetMap} from './map.js';
 import {resetSlider} from './slider.js';
+import {resetPhoto} from './add-photo.js';
 
 const COMMERCIAL_ROOM = '100';
 const NOT_FOR_GUESTS = '0';
@@ -14,6 +15,12 @@ const capacityElement = formElement.querySelector('#capacity');
 const submitButtonElement = formElement.querySelector('.ad-form__submit');
 const resetButtonElement = formElement.querySelector('.ad-form__reset');
 
+const pristine = new Pristine(formElement, {
+  classTo: 'ad-form__element',
+  errorTextParent: 'ad-form__element',
+  errorClass: 'has-danger',
+}, );
+
 timeInElement.addEventListener('change', () => {
   timeOutElement.value = timeInElement.value;
 });
@@ -21,12 +28,6 @@ timeInElement.addEventListener('change', () => {
 timeOutElement.addEventListener('change', () => {
   timeInElement.value = timeOutElement.value;
 });
-
-const pristine = new Pristine(formElement, {
-  classTo: 'ad-form__element',
-  errorTextParent: 'ad-form__element',
-  errorClass: 'has-danger',
-}, );
 
 const validatePrice = () => Number(priceElement.value) >= Number(priceElement.min);
 
@@ -47,18 +48,18 @@ const onRoomsChange = () => {
   pristine.validate(capacityElement);
   pristine.validate(roomNumberElement);
 };
+capacityElement.addEventListener('change', onRoomsChange);
+roomNumberElement.addEventListener('change', onRoomsChange);
 
 pristine.addValidator(priceElement, validatePrice, 'Меньше допустимого значения');
 pristine.addValidator(capacityElement, validateCapacity, 'Недопустимое количество гостей');
 pristine.addValidator(roomNumberElement, validateCapacity, 'Недопустимое количество комнат');
 
-capacityElement.addEventListener('change', onRoomsChange);
-roomNumberElement.addEventListener('change', onRoomsChange);
-
 const onFormReset = () => {
   formElement.reset();
   resetSlider();
   resetMap();
+  resetPhoto();
 };
 
 resetButtonElement.addEventListener('click', (evt) => {
