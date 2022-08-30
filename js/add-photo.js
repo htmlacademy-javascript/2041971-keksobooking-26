@@ -34,4 +34,14 @@ const initPhoto = () => {
   photoChooserElement.addEventListener('change', onPhotoLoad);
 };
 
-export {initPhoto};
+const clearPhoto = () => {
+  const photoImgElement = photoPrewiewElement.querySelector('img');
+  avatarChooserElement.value = '';
+  photoChooserElement.value = '';
+  avatarPrewiewElement.src = 'img/muffin-grey.svg';
+  if (photoImgElement ) {
+    photoPrewiewElement.removeChild(photoImgElement);
+  }
+};
+
+export {initPhoto, clearPhoto};

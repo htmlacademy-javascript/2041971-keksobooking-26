@@ -2,6 +2,7 @@ import {sendData} from './api.js';
 import {getMessageSuccess, getMessageError} from './messages.js';
 import {resetMap} from './map.js';
 import {resetSlider} from './slider.js';
+import {clearPhoto} from './add-photo.js';
 
 const COMMERCIAL_ROOM = '100';
 const NOT_FOR_GUESTS = '0';
@@ -59,6 +60,7 @@ const onFormReset = () => {
   formElement.reset();
   resetSlider();
   resetMap();
+  clearPhoto();
 };
 
 resetButtonElement.addEventListener('click', (evt) => {
