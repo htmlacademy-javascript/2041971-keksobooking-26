@@ -1,5 +1,5 @@
 import {activatePage} from './form.js';
-import {renderCards} from './popup.js';
+import {renderCard} from './popup.js';
 import {showAlert} from './utils.js';
 
 const ADDRESS_DEFAULT = {
@@ -64,7 +64,7 @@ const getOrdinaryMarkers = (hotel) => {
   );
   marker
     .addTo(markerGroup)
-    .bindPopup(renderCards(hotel));
+    .bindPopup(renderCard(hotel));
 };
 
 const renderMarkers = (offers) => {

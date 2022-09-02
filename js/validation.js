@@ -77,13 +77,13 @@ const unblockSubmitButton = () => {
   submitButtonElement.textContent = 'Опубликовать';
 };
 
-const sendOnSuccess = () => {
+const onSuccess = () => {
   unblockSubmitButton();
   getMessageSuccess();
   onFormReset();
 };
 
-const showError = () => {
+const onError = () => {
   unblockSubmitButton();
   getMessageError();
 };
@@ -96,7 +96,7 @@ formElement.addEventListener('submit', (evt) => {
   if (isValid) {
     blockSubmitButton();
     const formData = new FormData(formElement);
-    sendData(sendOnSuccess, showError, formData);
+    sendData(onSuccess, onError, formData);
   }
 });
 

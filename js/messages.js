@@ -47,24 +47,24 @@ const getMessageError = () => {
   const onMessageEscDown = (evt) => {
     if (isEscapeKey) {
       evt.preventDefault();
-      onErrorButttonClick();
+      onErrorButtonClick();
     }
   };
 
   const onDocumentClick = (evt) => {
     if (evt.target.closest('.error__message') !== errorMessageElement) {
-      onErrorButttonClick();
+      onErrorButtonClick();
     }
   };
 
-  function onErrorButttonClick () {
+  function onErrorButtonClick () {
     messageElement.classList.add('hidden');
-    errorButtonElement.removeEventListener('click', onErrorButttonClick);
+    errorButtonElement.removeEventListener('click', onErrorButtonClick);
     document.removeEventListener('keydown', onMessageEscDown);
     document.removeEventListener('click', onDocumentClick);
   }
 
-  errorButtonElement.addEventListener('click', onErrorButttonClick);
+  errorButtonElement.addEventListener('click', onErrorButtonClick);
   document.addEventListener('keydown', onMessageEscDown);
   document.addEventListener('click', onDocumentClick);
 };
