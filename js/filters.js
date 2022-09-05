@@ -1,5 +1,5 @@
-import {renderMarkers} from './map.js';
 import {debounce} from './utils.js';
+import {renderMarkers} from './map.js';
 
 const FILTER_DEFAULT = 'any';
 const HOTELS_COUNT = 10;
@@ -7,18 +7,26 @@ const Price = {
   MEDIUM: 10000,
   HIGH: 50000,
 };
+
 const mapFiltersFormElement = document.querySelector('.map__filters');
 const housingTypeElement = mapFiltersFormElement.querySelector('#housing-type');
 const housingPriceElement = mapFiltersFormElement.querySelector('#housing-price');
 const housingRoomsElement = mapFiltersFormElement.querySelector('#housing-rooms');
 const housingGuestsElement = mapFiltersFormElement.querySelector('#housing-guests');
+const mapFiltersSelectElements = mapFiltersFormElement.querySelectorAll('select');
+const mapFeaturesElement = mapFiltersFormElement.querySelector('.map__features');
 
-const filterByTipe = (type) => housingTypeElement.value === FILTER_DEFAULT || housingTypeElement.value === type;
-const filterByRoom = (rooms) => {if(housingRoomsElement.value === FILTER_DEFAULT || Number(housingRoomsElement.value) === Number(rooms)) {
-console.log(housingRoomsElement.value);
-console.log(rooms);
-}
+let offers = [];
+
+const activateFilters = (data) => {
+  offers = data;
+  mapFiltersFormElement.classList.remove('ad-form--disabled');
+  mapFiltersSelectElements.forEach((element) => element.removeAttribute('disabled'));
+  mapFeaturesElement.removeAttribute('disabled');
 };
+
+const filterByType = (type) => housingTypeElement.value === FILTER_DEFAULT || housingTypeElement.value === type;
+const filterByRoom = (rooms) => housingRoomsElement.value === FILTER_DEFAULT || rooms.toString() === housingRoomsElement.value;
 const filterByGuests = (guests) => housingGuestsElement.value === FILTER_DEFAULT || Number(housingGuestsElement.value) === guests;
 const filterByPrice = (price) => {
   switch (housingPriceElement.value) {
@@ -40,21 +48,32 @@ const filterByFeatures = (features) => {
   return checkBoxFeatures.length === 0;
 };
 
-const onFilterChange = (data) => {
-  const copyData = data.slice();
-  const filteredOffers = data.filter(({offer}) => filterByTipe(offer.type)
-      && filterByRoom(offer.rooms)
-      && filterByGuests(offer.guests)
-      && filterByPrice(offer.price)
-      && filterByFeatures(offer.features));
+const filterOffers = () => {
+  console.log(offers);
+  const filteredOffers = [];
+  for (const offer of offers) {
+    if (filteredOffers.length >= HOTELS_COUNT) {
+      break;
+    }
+
+    if (filterByType(offer.offer.type)
+        && filterByRoom(offer.offer.rooms)
+        && filterByGuests(offer.offer.guests)
+        && filterByPrice(offer.offer.price)
+        && filterByFeatures(offer.offer.features)
+    ) {
+      filteredOffers.push(offer);
+    }
+  }
   console.log(filteredOffers);
-  renderMarkers(filteredOffers/*.slice(0, HOTELS_COUNT)*/);
-
+  return filteredOffers;
 };
 
-const setFilterListener = (data) => {
-  const copyData = data.slice();
-  mapFiltersFormElement.addEventListener('change', debounce(() => onFilterChange(copyData)));
+const setFilterChange = (cb) => {
+  const debouncedCallback = debounce(cb);
+  mapFiltersFormElement.addEventListener('change', () => {debouncedCallback(renderMarkers(filterOffers()));
+  });
 };
 
-export {setFilterListener};
+
+export {activateFilters, setFilterChange};

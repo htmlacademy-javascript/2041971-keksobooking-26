@@ -15,12 +15,6 @@ const deactivatePage = () => {
   mapFeaturesElement.setAttribute('disabled', 'disabled');
 };
 
-const activateFilters = () => {
-  mapFiltersFormElement.classList.remove('ad-form--disabled');
-  mapFiltersSelectElements.forEach((element) => element.removeAttribute('disabled'));
-  mapFeaturesElement.removeAttribute('disabled');
-};
-
 const activatePage = () => {
   initiateSlider();
   initiatePhoto();
@@ -28,4 +22,4 @@ const activatePage = () => {
   fieldsetElements.forEach((element) => element.removeAttribute('disabled'));
 };
 
-export {deactivatePage, activateFilters, activatePage};
+export {deactivatePage, activatePage};

@@ -1,13 +1,13 @@
-import {deactivatePage, activateFilters} from './form.js';
+import {deactivatePage} from './form.js';
 import './validation.js';
-import {setFilterListener} from './filters.js';
+import {activateFilters, setFilterChange} from './filters.js';
 import {getData} from './api.js';
 import {getMap} from './map.js';
 
 const onLoadedSuccess = (data) => {
   getMap(data);
-  activateFilters();
-  setFilterListener(data);
+  activateFilters(data);
+  setFilterChange();
 };
 
 const onLoadedFail = () => {
