@@ -3,6 +3,7 @@ import {getMessageSuccess, getMessageError} from './messages.js';
 import {resetMap} from './map.js';
 import {resetSlider} from './slider.js';
 import {resetPhoto} from './add-photo.js';
+import {resetFilterForm} from './filters.js';
 
 const COMMERCIAL_ROOM = '100';
 const NOT_FOR_GUESTS = '0';
@@ -58,6 +59,7 @@ pristine.addValidator(roomNumberElement, validateCapacity, 'Недопустим
 const onFormReset = () => {
   formElement.reset();
   resetSlider();
+  resetFilterForm();
   resetMap();
   resetPhoto();
 };

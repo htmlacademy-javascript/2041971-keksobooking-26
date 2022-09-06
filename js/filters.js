@@ -16,10 +16,12 @@ const housingGuestsElement = mapFiltersFormElement.querySelector('#housing-guest
 const mapFiltersSelectElements = mapFiltersFormElement.querySelectorAll('select');
 const mapFeaturesElement = mapFiltersFormElement.querySelector('.map__features');
 
-let offers = [];
+const state = {
+  offers: [],
+};
 
 const activateFilters = (data) => {
-  offers = data;
+  state.offers = data;
   mapFiltersFormElement.classList.remove('ad-form--disabled');
   mapFiltersSelectElements.forEach((element) => element.removeAttribute('disabled'));
   mapFeaturesElement.removeAttribute('disabled');
@@ -47,11 +49,10 @@ const filterByFeatures = (features) => {
   }
   return checkBoxFeatures.length === 0;
 };
-
 const filterOffers = () => {
-  console.log(offers);
+  console.log(state.offers);
   const filteredOffers = [];
-  for (const offer of offers) {
+  for (const offer of state.offers) {
     if (filteredOffers.length >= HOTELS_COUNT) {
       break;
     }
@@ -73,4 +74,9 @@ const setFilterChange = () => {
   mapFiltersFormElement.addEventListener('change', () => debounce(renderMarkers(filterOffers())));
 };
 
-export {activateFilters, setFilterChange};
+const resetFilterForm = () =>{
+  mapFiltersFormElement.reset();
+  renderMarkers(state.offers.slice(0, HOTELS_COUNT));
+};
+
+export {activateFilters, setFilterChange, resetFilterForm};
