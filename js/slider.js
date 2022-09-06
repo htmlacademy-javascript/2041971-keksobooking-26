@@ -20,7 +20,7 @@ const initiateSlider = () => {
 
   noUiSlider.create(sliderElement, {
     range: {
-      min: MinPriceDictionary.MIN_FOR_FLAT,
+      min: MinPriceDictionary.MIN_FOR_BUNGALO,
       max: MAX_PRICE,
     },
     start: MinPriceDictionary.MIN_FOR_FLAT,
@@ -41,15 +41,20 @@ const initiateSlider = () => {
     pristine.validate(priceElement);
   });
 
+  const onPriceChange = () => {
+    sliderElement.noUiSlider.set(priceElement.value);
+  };
+
+  priceElement.addEventListener('input', onPriceChange);
+
   const onTypeElementClick = (price) => {
     priceElement.min = price;
     priceElement.placeholder = price;
     sliderElement.noUiSlider.updateOptions({
       range: {
-        min: price,
         max: MAX_PRICE,
       },
-      start: price,
+      start: MinPriceDictionary.MIN_FOR_BUNGALO,
     });
   };
 
@@ -78,10 +83,10 @@ const initiateSlider = () => {
 const resetSlider = () => {
   sliderElement.noUiSlider.updateOptions({
     range: {
-      min: MinPriceDictionary.MIN_FOR_FLAT,
+      min: MinPriceDictionary.MIN_FOR_BUNGALO,
       max: MAX_PRICE,
     },
-    start: MinPriceDictionary.MIN_FOR_FLAT,
+    start: MinPriceDictionary.MIN_FOR_BUNGALO,
     step: SLIDER_STEP,
   });
 };

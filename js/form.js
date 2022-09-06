@@ -1,4 +1,4 @@
-import {initPhoto} from './add-photo.js';
+import {initiatePhoto} from './add-photo.js';
 import {initiateSlider} from './slider.js';
 
 const formElement = document.querySelector('.ad-form');
@@ -15,19 +15,11 @@ const deactivatePage = () => {
   mapFeaturesElement.setAttribute('disabled', 'disabled');
 };
 
-const activateFilters = () => {
-  mapFiltersFormElement.classList.remove('ad-form--disabled');
-  mapFiltersSelectElements.forEach((element) => element.removeAttribute('disabled'));
-  mapFeaturesElement.removeAttribute('disabled');
-};
-
 const activatePage = () => {
   initiateSlider();
-  initPhoto();
+  initiatePhoto();
   formElement.classList.remove('ad-form--disabled');
   fieldsetElements.forEach((element) => element.removeAttribute('disabled'));
-  activateFilters();
 };
 
-
-export {deactivatePage, activateFilters, activatePage};
+export {deactivatePage, activatePage};
