@@ -50,7 +50,6 @@ const filterByFeatures = (features) => {
   return checkBoxFeatures.length === 0;
 };
 const filterOffers = () => {
-  console.log(state.offers);
   const filteredOffers = [];
   for (const offer of state.offers) {
     if (filteredOffers.length >= HOTELS_COUNT) {
@@ -66,7 +65,6 @@ const filterOffers = () => {
       filteredOffers.push(offer);
     }
   }
-  console.log(filteredOffers);
   return filteredOffers;
 };
 

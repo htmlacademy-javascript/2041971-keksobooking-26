@@ -23,26 +23,30 @@ const cardTemplateElement = document.querySelector('#card')
   .querySelector('.popup');
 
 const createRoomsVariation = (hotel) => {
+  let roomsVariation;
   switch (hotel.offer.rooms) {
     case RoomsNumber.ONE:
-      hotel.offer.rooms += RoomVariations.ONE_ROOM;
+      roomsVariation = `${hotel.offer.rooms} ${RoomVariations.ONE_ROOM}`;
       break;
     case RoomsNumber.HUNDRED:
-      hotel.offer.rooms += RoomVariations.HUNDRED_ROOMS;
+      roomsVariation = `${hotel.offer.rooms} ${RoomVariations.HUNDRED_ROOMS}`;
       break;
     default:
-      hotel.offer.rooms += RoomVariations.DEFAULT_ROOMS;
+      roomsVariation =  `${hotel.offer.rooms} ${RoomVariations.DEFAULT_ROOMS}`;
   }
+  return roomsVariation;
 };
 
 const createGuestsVariation = (hotel) => {
+  let guestsVariation;
   switch (hotel.offer.guests) {
     case 1:
-      hotel.offer.guests += GuestVariations.ONE_GUEST;
+      guestsVariation = `${hotel.offer.guests} ${GuestVariations.ONE_GUEST}`;
       break;
     default:
-      hotel.offer.guests += GuestVariations.DEFAULT_GUESTS;
+      guestsVariation = `${hotel.offer.guests} ${GuestVariations.DEFAULT_GUESTS}`;
   }
+  return guestsVariation;
 };
 
 const createHotelType = (data, element) => {
@@ -121,9 +125,7 @@ const renderCard = (hotel) => {
   }
 
   if (hotel.offer.rooms && hotel.offer.guests) {
-    createRoomsVariation(hotel);
-    createGuestsVariation(hotel);
-    popupCapacityElement.textContent = `${hotel.offer.rooms} для ${hotel.offer.guests} `;
+    popupCapacityElement.textContent = `${createRoomsVariation(hotel)} для ${createGuestsVariation(hotel)}`;
   } else {
     popupCapacityElement.remove();
   }
