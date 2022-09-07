@@ -1,22 +1,109 @@
-const cardTemplateElement = document.querySelector('#card')
-  .content
-  .querySelector('.popup');
-
-const setElementValue = (data, element, attribute) => {
-  if (data) {
-    element[attribute] = data;
-  } else {
-    element.remove();
-  }
-};
+import {setElementValue} from './utils.js';
 
 const HtmlAttribute = {
   TEXT_CONTENT: 'textContent',
   SRC: 'src',
 };
+const RoomVariations = {
+  ONE_ROOM: ' комната',
+  HUNDRED_ROOMS: ' комнат',
+  DEFAULT_ROOMS: ' комнаты',
+};
+const GuestVariations = {
+  ONE_GUEST: ' гостя',
+  DEFAULT_GUESTS: ' гостей',
+};
+const RoomsNumber = {
+  ONE: 1,
+  HUNDRED: 100,
+};
 
-const renderCards = (hotel) => {
+const cardTemplateElement = document.querySelector('#card')
+  .content
+  .querySelector('.popup');
 
+const createRoomsVariation = (hotel) => {
+  let roomsVariation;
+  switch (hotel.offer.rooms) {
+    case RoomsNumber.ONE:
+      roomsVariation = `${hotel.offer.rooms} ${RoomVariations.ONE_ROOM}`;
+      break;
+    case RoomsNumber.HUNDRED:
+      roomsVariation = `${hotel.offer.rooms} ${RoomVariations.HUNDRED_ROOMS}`;
+      break;
+    default:
+      roomsVariation =  `${hotel.offer.rooms} ${RoomVariations.DEFAULT_ROOMS}`;
+  }
+  return roomsVariation;
+};
+
+const createGuestsVariation = (hotel) => {
+  let guestsVariation;
+  switch (hotel.offer.guests) {
+    case 1:
+      guestsVariation = `${hotel.offer.guests} ${GuestVariations.ONE_GUEST}`;
+      break;
+    default:
+      guestsVariation = `${hotel.offer.guests} ${GuestVariations.DEFAULT_GUESTS}`;
+  }
+  return guestsVariation;
+};
+
+const createHotelType = (data, element) => {
+  if (data) {
+    switch (data) {
+      case 'flat':
+        element.textContent = 'Квартира';
+        break;
+      case 'bungalow':
+        element.textContent = 'Бунгало';
+        break;
+      case 'house':
+        element.textContent = 'Дом';
+        break;
+      case 'palace':
+        element.textContent = 'Дворец';
+        break;
+      case 'hotel':
+        element.textContent = 'Отель';
+        break;
+    }
+  } else {
+    element.remove();
+  }
+};
+
+const createHotelFeatures = (data, element, featuresList) => {
+  if (data) {
+    data.forEach((feature) => {
+      const featureListItemElement = element.querySelector(`.popup__feature--${feature}`);
+      featuresList.append(featureListItemElement);
+    });
+    element.textContent = '';
+    element.appendChild(featuresList);
+  } else {
+    element.textContent = '';
+  }
+};
+
+const createHotelPhotos = (data, element, imgElement) => {
+  if (data) {
+    if (data.length > 1) {
+      element.removeChild(imgElement);
+      data.forEach((photo) => {
+        const photoCopy = imgElement.cloneNode(true);
+        photoCopy.src = photo;
+        element.append(photoCopy);
+      });
+    } else {
+      imgElement.src = data[0];
+    }
+  } else {
+    element.remove();
+  }
+};
+
+const renderCard = (hotel) => {
   const cardElement = cardTemplateElement.cloneNode(true);
   const popupTypeElement = cardElement.querySelector('.popup__type');
   const popupPhotosElement =  cardElement.querySelector('.popup__photos');
@@ -38,25 +125,7 @@ const renderCards = (hotel) => {
   }
 
   if (hotel.offer.rooms && hotel.offer.guests) {
-    switch (hotel.offer.rooms) {
-      case 1:
-        hotel.offer.rooms += ' комната';
-        break;
-      case 5:
-        hotel.offer.rooms += ' комнат';
-        break;
-      default:
-        hotel.offer.rooms += ' комнаты';
-    }
-
-    switch (hotel.offer.guests) {
-      case 1:
-        hotel.offer.guests += '  гостя';
-        break;
-      default:
-        hotel.offer.guests += ' гостей';
-    }
-    popupCapacityElement.textContent = `${hotel.offer.rooms} для ${hotel.offer.guests} `;
+    popupCapacityElement.textContent = `${createRoomsVariation(hotel)} для ${createGuestsVariation(hotel)}`;
   } else {
     popupCapacityElement.remove();
   }
@@ -69,53 +138,11 @@ const renderCards = (hotel) => {
 
   const featureListFragment = document.createDocumentFragment();
 
-  if (hotel.offer.features) {
-    hotel.offer.features.forEach((feature) => {
-      const featureListItemElement = popupFeaturesElement.querySelector(`.popup__feature--${feature}`);
-      featureListFragment.append(featureListItemElement);
-    });
-    popupFeaturesElement.textContent = '';
-    popupFeaturesElement.appendChild(featureListFragment);
-  } else {
-    popupFeaturesElement.textContent = '';
-  }
-  if (hotel.offer.type) {
-    switch (hotel.offer.type) {
-      case 'flat':
-        popupTypeElement.textContent = 'Квартира';
-        break;
-      case 'bungalow':
-        popupTypeElement.textContent = 'Бунгало';
-        break;
-      case 'house':
-        popupTypeElement.textContent = 'Дом';
-        break;
-      case 'palace':
-        popupTypeElement.textContent = 'Дворец';
-        break;
-      case 'hotel':
-        popupTypeElement.textContent = 'Отель';
-        break;
-    }
-  } else {
-    popupTypeElement.remove();
-  }
+  createHotelFeatures(hotel.offer.features, popupFeaturesElement, featureListFragment);
+  createHotelType(hotel.offer.type, popupTypeElement);
+  createHotelPhotos(hotel.offer.photos, popupPhotosElement, popupPhotosImgElement);
 
-  if (hotel.offer.photos) {
-    if (hotel.offer.photos.length > 1) {
-      popupPhotosElement.removeChild(popupPhotosImgElement);
-      hotel.offer.photos.forEach((photo) => {
-        const photoCopy = popupPhotosImgElement.cloneNode(true);
-        photoCopy.src = photo;
-        popupPhotosElement.append(photoCopy);
-      });
-    } else {
-      popupPhotosImgElement.src = hotel.offer.photos[0];
-    }
-  } else {
-    popupPhotosElement.remove();
-  }
   return cardElement;
 };
 
-export {renderCards};
+export {renderCard};

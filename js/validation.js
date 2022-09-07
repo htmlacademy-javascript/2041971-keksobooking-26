@@ -1,23 +1,26 @@
+import {sendData} from './api.js';
+import {getMessageSuccess, getMessageError} from './messages.js';
+import {resetMap} from './map.js';
+import {resetSlider} from './slider.js';
+import {resetPhoto} from './add-photo.js';
+import {resetFilterForm} from './filters.js';
+
 const COMMERCIAL_ROOM = '100';
 const NOT_FOR_GUESTS = '0';
-const MAX_PRICE = 100000;
-const MIN_FOR_BUNGALO = 0;
-const MIN_FOR_FLAT = 1000;
-const MIN_FOR_HOTEL = 3000;
-const MIN_FOR_HOUSE = 5000;
-const MIN_FOR_PALACE = 10000;
-const CAPACITY_CARRENT = 1;
-const SLIDER_STEP = 1;
-const DIGITS = 0;
-
 const formElement = document.querySelector('.ad-form');
 const priceElement = formElement.querySelector('#price');
-const typeElement = formElement.querySelector('#type');
 const timeInElement = formElement.querySelector('#timein');
 const timeOutElement = formElement.querySelector('#timeout');
 const roomNumberElement = formElement.querySelector('#room_number');
 const capacityElement = formElement.querySelector('#capacity');
-const sliderElement = formElement.querySelector('.ad-form__slider');
+const submitButtonElement = formElement.querySelector('.ad-form__submit');
+const resetButtonElement = formElement.querySelector('.ad-form__reset');
+
+const pristine = new Pristine(formElement, {
+  classTo: 'ad-form__element',
+  errorTextParent: 'ad-form__element',
+  errorClass: 'has-danger',
+}, );
 
 timeInElement.addEventListener('change', () => {
   timeOutElement.value = timeInElement.value;
@@ -27,116 +30,7 @@ timeOutElement.addEventListener('change', () => {
   timeInElement.value = timeOutElement.value;
 });
 
-const pristine = new Pristine(formElement, {
-  classTo: 'ad-form__element',
-  errorTextParent: 'ad-form__element',
-});
-
-priceElement.min = MIN_FOR_FLAT;
-priceElement.placeholder = MIN_FOR_FLAT;
-capacityElement.value = CAPACITY_CARRENT;
-
-const setMinPriceListener = () => {
-  typeElement.addEventListener('change', () => {
-    priceElement.value = '';
-    switch (typeElement.value) {
-      case 'bungalow':
-        priceElement.min = MIN_FOR_BUNGALO;
-        priceElement.placeholder = MIN_FOR_BUNGALO;
-        break;
-      case 'hotel':
-        priceElement.min = MIN_FOR_HOTEL;
-        priceElement.placeholder = MIN_FOR_HOTEL;
-        break;
-      case 'house':
-        priceElement.min = MIN_FOR_HOUSE;
-        priceElement.placeholder = MIN_FOR_HOUSE;
-        break;
-      case 'palace':
-        priceElement.min = MIN_FOR_PALACE;
-        priceElement.placeholder = MIN_FOR_PALACE;
-        break;
-      case 'flat':
-        priceElement.min = MIN_FOR_FLAT;
-        priceElement.placeholder = MIN_FOR_FLAT;
-        break;
-    }
-  });
-};
-
-setMinPriceListener();
-
-noUiSlider.create(sliderElement, {
-  range: {
-    min: MIN_FOR_FLAT,
-    max: MAX_PRICE,
-  },
-  start: MIN_FOR_FLAT,
-  step: SLIDER_STEP,
-  connect: 'lower',
-  format: {
-    to: function (value) {
-      return value.toFixed(DIGITS);
-    },
-    from: function (value) {
-      return parseFloat(value);
-    },
-  },
-});
-
-sliderElement.noUiSlider.on('update', () => {
-  priceElement.value = sliderElement.noUiSlider.get();
-});
-
-typeElement.addEventListener('change', (evt) => {
-  switch (evt.target.selected) {
-    case 'bungalow':
-      sliderElement.noUiSlider.updateOptions({
-        range: {
-          min: MIN_FOR_BUNGALO,
-        },
-        start: MIN_FOR_BUNGALO,
-      });
-      break;
-    case 'hotel':
-      sliderElement.noUiSlider.updateOptions({
-        range: {
-          min: MIN_FOR_HOTEL,
-        },
-        start: MIN_FOR_HOTEL,
-      });
-      break;
-    case 'house':
-      sliderElement.noUiSlider.updateOptions({
-        range: {
-          min: MIN_FOR_HOUSE,
-        },
-        start: MIN_FOR_HOUSE,
-      });
-      break;
-    case 'palace':
-      sliderElement.noUiSlider.updateOptions({
-        range: {
-          min: MIN_FOR_PALACE,
-        },
-        start: MIN_FOR_PALACE,
-      });
-      break;
-    case 'flat':
-      sliderElement.noUiSlider.updateOptions({
-        range: {
-          min: MIN_FOR_PALACE,
-        },
-        start: MIN_FOR_FLAT,
-      });
-      break;
-  }
-});
-
-const validatePrice = () => {
-  priceElement.addEventListener('input', () => +priceElement.value >= +priceElement.min);
-  return +priceElement.value >= +priceElement.min;
-};
+const validatePrice = () => Number(priceElement.value) >= Number(priceElement.min);
 
 const validateCapacity = () => {
   const isValidCommercial = capacityElement.value === NOT_FOR_GUESTS &&
@@ -151,13 +45,61 @@ const validateCapacity = () => {
     return false;
   }
 };
+const onRoomsChange = () => {
+  pristine.validate(capacityElement);
+  pristine.validate(roomNumberElement);
+};
+capacityElement.addEventListener('change', onRoomsChange);
+roomNumberElement.addEventListener('change', onRoomsChange);
 
 pristine.addValidator(priceElement, validatePrice, 'Меньше допустимого значения');
 pristine.addValidator(capacityElement, validateCapacity, 'Недопустимое количество гостей');
+pristine.addValidator(roomNumberElement, validateCapacity, 'Недопустимое количество комнат');
+
+const onFormReset = () => {
+  formElement.reset();
+  resetSlider();
+  resetFilterForm();
+  resetMap();
+  resetPhoto();
+};
+
+resetButtonElement.addEventListener('click', (evt) => {
+  evt.preventDefault();
+  onFormReset();
+});
+
+const blockSubmitButton = () => {
+  submitButtonElement.disabled = true;
+  submitButtonElement.textContent = 'Публикую...';
+};
+
+const unblockSubmitButton = () => {
+  submitButtonElement.disabled = false;
+  submitButtonElement.textContent = 'Опубликовать';
+};
+
+const onSuccess = () => {
+  unblockSubmitButton();
+  getMessageSuccess();
+  onFormReset();
+};
+
+const onError = () => {
+  unblockSubmitButton();
+  getMessageError();
+};
+
+pristine.validate();
 
 formElement.addEventListener('submit', (evt) => {
   evt.preventDefault();
-  pristine.validate();
+  const isValid = pristine.validate();
+  if (isValid) {
+    blockSubmitButton();
+    const formData = new FormData(formElement);
+    sendData(onSuccess, onError, formData);
+  }
 });
 
-export {formElement};
+export {pristine};
