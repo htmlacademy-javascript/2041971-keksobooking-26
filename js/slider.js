@@ -27,12 +27,8 @@ const initiateSlider = () => {
     step: SLIDER_STEP,
     connect: 'lower',
     format: {
-      to: function (value) {
-        return value.toFixed(DIGITS);
-      },
-      from: function (value) {
-        return parseFloat(value);
-      },
+      to: (value) => value.toFixed(DIGITS),
+      from: (value) => parseFloat(value),
     },
   });
 

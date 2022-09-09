@@ -6,7 +6,6 @@ const photoPreviewElement = document.querySelector('.ad-form__photo');
 
 const initiatePhoto = () => {
   const photoImgElement = document.createElement('img');
-  photoImgElement.alt = 'Фотогроафия жилья';
   photoImgElement.style.width = '70px';
   photoImgElement.style.height = '70px';
   photoPreviewElement.append(photoImgElement);
