@@ -39,11 +39,7 @@ const validateCapacity = () => {
   capacityElement.value !== NOT_FOR_GUESTS &&
   roomNumberElement.value !== COMMERCIAL_ROOM;
 
-  if (isValidCommercial || isValidCapacity) {
-    return true;
-  } else {
-    return false;
-  }
+  return (isValidCommercial || isValidCapacity);
 };
 const onRoomsChange = () => {
   pristine.validate(capacityElement);
@@ -89,8 +85,6 @@ const onError = () => {
   unblockSubmitButton();
   getMessageError();
 };
-
-pristine.validate();
 
 formElement.addEventListener('submit', (evt) => {
   evt.preventDefault();

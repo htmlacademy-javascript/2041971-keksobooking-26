@@ -12,7 +12,7 @@ const getMessageSuccess = () => {
   const successMessageElement = messageElement.querySelector('.success__message');
 
   const onMessageEscDown = (evt) => {
-    if (isEscapeKey) {
+    if (isEscapeKey(evt)) {
       evt.preventDefault();
       onDocumentClickKeydown();
     }
@@ -45,7 +45,7 @@ const getMessageError = () => {
   const errorButtonElement = messageElement.querySelector('.error__button');
 
   const onMessageEscDown = (evt) => {
-    if (isEscapeKey) {
+    if (isEscapeKey(evt)) {
       evt.preventDefault();
       onErrorButtonClick();
     }
